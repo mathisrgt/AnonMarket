@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:3000/
+
+### Test Swap Route
+POST {{baseUrl}}swap HTTP/1.1
+Content-Type: application/json
+
+{
+    "message": "0x1234567890abcdef",
+    "signature": {
+        "keyImage": "123456789",
+        "c": "0x...",
+        "r": ["0x..."]
+    },
+    "inputAmount": "1000000000000000000",
+    "outcome": 1,
+    "marketId": "0"
+}
+
+### Test Redeem Route
+POST {{baseUrl}}redeem HTTP/1.1
+Content-Type: application/json
+
+{
+    "marketId": "1",
+    "outcome": 1,
+    "keyImage": "0123",
+    "recipient": "0x050e1364BD2Fe1c42CBe184F5C1F8CC8254b230F"
+}
