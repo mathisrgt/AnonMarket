@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/cors": "^9.0.1",
+    "@pythnetwork/hermes-client": "^1.2.0",
     "dotenv": "^16.4.5",
     "ethers": "5.7.2",
     "fastify": "^4.26.2"
