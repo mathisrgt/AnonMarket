@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Key, useState } from "react";
 
 import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
-import handleSwap from "@/services/handleSwap.ts"
+import handleSwap from "@/services/handleSwap"
 // viem
 import { handleAction } from "../../services/viemEscrow";
 import { sendTransaction } from "viem/actions";
@@ -207,7 +207,7 @@ export default function PortfolioPage() {
                                             <h2 id="modal-title" className="text-xl font-semibold mb-4">Select an Action</h2>
                                             <div className="grid grid-cols-1 gap-4">
                                                 <Button color="primary" className="w-full">Deposit</Button>
-                                                <Button color="primary" variant="bordered" className="w-full"  onClick={() => handleSwap()}>Swap</Button>
+                                                <Button color="primary" variant="bordered" className="w-full"  onClick={() => (handleSwap(provider), handleDepositInescrow)}>Swap</Button>
                                                 <Button color="primary" className="w-full">Onramp</Button>
                                             </div>
                                         </ModalBody>

@@ -1,22 +1,16 @@
 // use this when there is no `"type": "module"` in your package.json, i.e. you're using commonjs
 
 import { SDK, HashLock, PrivateKeyProviderConnector, NetworkEnum } from "@1inch/cross-chain-sdk";
-import type { IProvider } from "@web3auth/base";
 import { solidityPackedKeccak256, randomBytes, Contract, Wallet } from 'ethers';
 import { createWalletClient, createPublicClient, custom, formatEther, parseUnits, encodeFunctionData, parseEther } from 'viem'
-import { mainnet, polygonAmoy, sepolia } from 'viem/chains'
 import { usdcTokenAbi, usdcTokenAddress, contractAddress_escrow, contractABI_escrow } from '../components/constants';
-import { Console } from 'console';
-import { web3 } from 'web3';
-import * as elliptic from 'elliptic';
-import { Hex, hexToBytes } from 'viem';
+import Web3 from 'web3';
 import { RingSignature, Curve, CurveName, Point } from '@cypher-laboratory/alicesring-lsag';
-import { privateKeyProvider } from "@/app/providers";
 import { getViewChain } from "./viemEscrow";
 
 const curve = new Curve(CurveName.SECP256K1);
 
-export async function handleAction(provider: IProvider): Promise<any> {
+export default async function handleSwap(provider) {
     const publicClient = createPublicClient({
         chain: getViewChain(provider),
         transport: custom(provider),
@@ -32,7 +26,7 @@ export async function handleAction(provider: IProvider): Promise<any> {
     const data = encodeFunctionData({
         abi: usdcTokenAbi,
         functionName: 'approve',
-        args: [0x111111125421ca6dc452d289314280a0f8842a65, (2n ** 256n - 1n)], // Approuve infite for aggregation router v6
+        args: ["0x111111125421ca6dc452d289314280a0f8842a65", (100000000000000)], // Approuve infite for aggregation router v6
     });
 
     console.log('Approve Transaction Data:', data);
