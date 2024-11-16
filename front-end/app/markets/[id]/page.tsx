@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, Minus, Plus } from 'lucide-react';
 import { Button } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
-import { Metadata } from 'next';
 
 interface Market {
     id: string;
@@ -16,14 +15,8 @@ interface Market {
     options: Array<{ label: string; odds: string; }>;
 }
 
-type Props = {
-    params: Promise<{ id: string }>,
-    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
-}
-
-export default async function MarketPage({ params, searchParams }: Props) {
+export default function MarketPage({ params }: { params: { id: string } }) {
     const router = useRouter();
-    const resolvedParams = await params;
     const [market, setMarket] = useState<Market | null>(null);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [shares, setShares] = useState(1);
@@ -67,7 +60,7 @@ export default async function MarketPage({ params, searchParams }: Props) {
     return (
         <div className="max-w-4xl mx-auto pt-6 px-4 pb-24">
             {/* Back Button */}
-            <button
+            <button 
                 onClick={handleBack}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
             >
@@ -79,7 +72,7 @@ export default async function MarketPage({ params, searchParams }: Props) {
             <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-6 mb-6">
                 <h1 className="text-2xl font-bold mb-4">{market.title}</h1>
                 <p className="text-gray-600 mb-6">{market.description}</p>
-
+                
                 <div className="space-y-4 mb-6">
                     <div className="flex justify-between text-sm text-gray-500">
                         <span>End Date:</span>
