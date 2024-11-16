@@ -46,7 +46,7 @@ AnonMarket combines **privacy, reliability, and accessibility** to redefine pred
 AnonMarket leverages **state-of-the-art technologies** to create a seamless and efficient platform:  
 
 ### 🔒 **Backend**  
-- Deployed on **Ethereum**, **Base**, **Rootstock** and **Scroll**, ensuring immutability, transparency, and reliability.  
+- Deployed on **Ethereum**, **Base**, **Rootstock**, **Zircuit**, **Chiliz** **Linea** and **Scroll**, ensuring immutability, transparency, and reliability.  
 - Custom smart contracts optimized for **low gas fees**, with batching mechanisms to reduce transaction costs.  
 
 ### 📡 **Oracles**  
