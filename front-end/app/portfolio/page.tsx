@@ -4,12 +4,27 @@ import Image from 'next/image';
 import { ArrowDownToLine, ArrowUpFromLine } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Key, useState } from "react";
-
+import { createWalletClient, createPublicClient, custom, formatEther, parseUnits, encodeFunctionData, parseEther } from 'viem'
 import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
 import handleSwap from "@/services/handleSwap"
-// viem
-import { handleAction } from "../../services/viemEscrow";
+import { mainnet, polygonAmoy, sepolia, baseSepolia } from 'viem/chains'
+import { handleApproveAction, handleDepositAction } from "../../services/viemEscrow";
 import { sendTransaction } from "viem/actions";
+import { IProvider } from "@web3auth/base";
+export const getViewChain = (provider: IProvider) => {
+    switch (provider.chainId) {
+        case "1":
+            return mainnet;
+        case "0x13882":
+            return polygonAmoy;
+        case "0xaa36a7":
+            return sepolia;
+        case "0x14A34":
+            return baseSepolia;
+        default:
+            return mainnet;
+    }
+}
 
 export default function PortfolioPage() {
     const router = useRouter();
@@ -143,21 +158,36 @@ export default function PortfolioPage() {
         console.log('Claiming position:', position);
         // Add your claim logic here
     };
-    function handleDepositInescrow() {
+    async function handleDepositInescrow() {
         if (!provider) {
             console.error('Error: Provider is not initialized.');
             return;
         }
 
-        setIsLoading(true); // Affiche l'état "Processing..."
-        handleAction(provider, isApproved)
+        const publicClient = createPublicClient({
+            chain: getViewChain(provider),
+            transport: custom(provider),
+        });
+
+        const walletClient = createWalletClient({
+            chain: getViewChain(provider),
+            transport: custom(provider),
+        });
+
+        await handleSwap(provider, publicClient, walletClient)
+        await handleApproveAction(provider, publicClient, walletClient)
             .then((response) => {
                 console.log(isApproved ? 'Deposit successful' : 'Approval successful', response);
-
-                // Passe à l'étape suivante si nécessaire
-                if (!isApproved) {
-                    setIsApproved(true);
-                }
+            })
+            .catch((error) => {
+                console.error('Action failed:', error);
+            })
+            .finally(() => {
+                setIsLoading(false); // Réinitialise l'état de chargement
+            });
+        await handleDepositAction(provider, publicClient, walletClient)
+            .then((response) => {
+                console.log(isApproved ? 'Deposit successful' : 'Approval successful', response);
             })
             .catch((error) => {
                 console.error('Action failed:', error);
@@ -207,7 +237,7 @@ export default function PortfolioPage() {
                                             <h2 id="modal-title" className="text-xl font-semibold mb-4">Select an Action</h2>
                                             <div className="grid grid-cols-1 gap-4">
                                                 <Button color="primary" className="w-full">Deposit</Button>
-                                                <Button color="primary" variant="bordered" className="w-full"  onClick={() => (handleSwap(provider), handleDepositInescrow)}>Swap</Button>
+                                                <Button color="primary" variant="bordered" className="w-full" onClick={() => (handleDepositInescrow())}>Swap</Button>
                                                 <Button color="primary" className="w-full">Onramp</Button>
                                             </div>
                                         </ModalBody>

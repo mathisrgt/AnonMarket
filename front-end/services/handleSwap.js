@@ -6,21 +6,11 @@ import { createWalletClient, createPublicClient, custom, formatEther, parseUnits
 import { usdcTokenAbi, usdcTokenAddress, contractAddress_escrow, contractABI_escrow } from '../components/constants';
 import Web3 from 'web3';
 import { RingSignature, Curve, CurveName, Point } from '@cypher-laboratory/alicesring-lsag';
-import { getViewChain } from "./viemEscrow";
+import { getViewChain } from "@/app/portfolio/page";
 
 const curve = new Curve(CurveName.SECP256K1);
 
-export default async function handleSwap(provider) {
-    const publicClient = createPublicClient({
-        chain: getViewChain(provider),
-        transport: custom(provider),
-    });
-
-    const walletClient = createWalletClient({
-        chain: getViewChain(provider),
-        transport: custom(provider),
-    });
-
+export default async function handleSwap(provider, publicClient, walletClient) {
     const account = await walletClient.getAddresses();
     console.log(account)
     const data = encodeFunctionData({
