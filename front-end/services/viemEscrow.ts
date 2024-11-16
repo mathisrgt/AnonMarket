@@ -22,7 +22,7 @@ export async function handleApproveAction(provider: IProvider, publicClient: Pub
         });
 
         console.log('Approve Transaction Data:', data);
-
+        
         const hash = await walletClient.sendTransaction({
             to: usdcTokenAddress,
             data: data,
@@ -68,7 +68,7 @@ export async function handleDepositAction(provider: IProvider, publicClient: Pub
         });
 
         console.log('Deposit Transaction Data:', dataDeposit);
-
+        console.log(account[0])
         const hash = await walletClient.sendTransaction({
             to: contractAddress_escrow,
             data: dataDeposit,

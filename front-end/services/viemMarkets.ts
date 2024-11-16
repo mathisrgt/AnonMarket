@@ -1,5 +1,5 @@
 import { createWalletClient, createPublicClient, custom, formatEther, parseUnits, encodeFunctionData, parseEther } from 'viem'
-import { mainnet, polygonAmoy, sepolia } from 'viem/chains'
+import { mainnet, polygonAmoy, sepolia, baseSepolia } from 'viem/chains'
 import type { IProvider } from "@web3auth/base";
 import { usdcTokenAbi, usdcTokenAddress, contractAddress_escrow, contractABI_escrow } from '../components/constants';
 import { Console } from 'console';
@@ -16,6 +16,8 @@ const getViewChain = (provider: IProvider) => {
             return polygonAmoy;
         case "0xaa36a7":
             return sepolia;
+        case "0x14A34":
+            return baseSepolia;
         default:
             return mainnet;
     }
@@ -40,7 +42,7 @@ export const getDepositPublicKey = async (
             abi: contractABI_escrow,
             address: contractAddress_escrow,
             functionName: 'getDeposits10',
-        })  as EscrowData; 
+        }) as EscrowData;
 
         console.log('Deposits fetched:', data);
 

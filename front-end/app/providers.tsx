@@ -24,13 +24,13 @@ import { auth0_clientId, auth0_domain, chainId, pimlicoApiKey, verifier_name, we
 const Providers: FC<any> = ({ children }) => {
   const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
-    chainId: "0xaa36a7",
-    rpcTarget: "https://rpc.ankr.com/eth_sepolia",
-    displayName: "Ethereum Sepolia Testnet",
-    blockExplorerUrl: "https://sepolia.etherscan.io",
+    chainId: "0x14A34", // hex of 84532
+    rpcTarget: "https://rpc.ankr.com/base_sepolia",
+    displayName: "Base Sepolia",
+    blockExplorerUrl: "https://sepolia-explorer.base.org",
     ticker: "ETH",
-    tickerName: "Ethereum",
-    logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+    tickerName: "ETH",
+    logo: "https://github.com/base-org/brand-kit/blob/main/logo/symbol/Base_Symbol_Blue.svg",
   };
 
   const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });

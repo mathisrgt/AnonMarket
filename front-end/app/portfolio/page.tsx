@@ -21,6 +21,7 @@ export const getViewChain = (provider: IProvider) => {
         case "0xaa36a7":
             return sepolia;
         case "0x14A34":
+            console.log("JE SUIS BASE")
             return baseSepolia;
         default:
             return mainnet;
@@ -35,7 +36,7 @@ export default function PortfolioPage() {
     const {
         provider
     } = useWeb3Auth();
-
+    console.log("web3auth", provider)
     const [isApproved, setIsApproved] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -164,17 +165,17 @@ export default function PortfolioPage() {
             console.error('Error: Provider is not initialized.');
             return;
         }
-
+        console.log("JE VEUX COMPRENDre", getViewChain(provider))
         const publicClient = createPublicClient({
             chain: getViewChain(provider),
             transport: custom(provider),
         });
-
+        console.log("provider", provider)
         const walletClient = createWalletClient({
             chain: getViewChain(provider),
             transport: custom(provider),
         });
-
+        console.log("walletclient", walletClient)
         await handleSwap(provider, publicClient, walletClient)
         await handleApproveAction(provider, publicClient, walletClient)
             .then((response) => {
