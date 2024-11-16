@@ -1,12 +1,12 @@
 'use client';
-import { Card, CardBody, Button, Divider, Tabs, Tab } from "@nextui-org/react";
+import { Card, CardBody, Button, Divider, Tabs, Tab, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, } from "@nextui-org/react";
 import Image from 'next/image';
 import { ArrowDownToLine, ArrowUpFromLine } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Key, useState } from "react";
 
 import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
-
+import handleSwap from "@/services/handleSwap.ts"
 // viem
 import { handleAction } from "../../services/viemEscrow";
 import { sendTransaction } from "viem/actions";
@@ -14,6 +14,7 @@ import { sendTransaction } from "viem/actions";
 export default function PortfolioPage() {
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState('current');
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const {
         provider
@@ -142,6 +143,29 @@ export default function PortfolioPage() {
         console.log('Claiming position:', position);
         // Add your claim logic here
     };
+    function handleDepositInescrow() {
+        if (!provider) {
+            console.error('Error: Provider is not initialized.');
+            return;
+        }
+
+        setIsLoading(true); // Affiche l'état "Processing..."
+        handleAction(provider, isApproved)
+            .then((response) => {
+                console.log(isApproved ? 'Deposit successful' : 'Approval successful', response);
+
+                // Passe à l'étape suivante si nécessaire
+                if (!isApproved) {
+                    setIsApproved(true);
+                }
+            })
+            .catch((error) => {
+                console.error('Action failed:', error);
+            })
+            .finally(() => {
+                setIsLoading(false); // Réinitialise l'état de chargement
+            });
+    }
 
     return (
         <div className="max-w-4xl mx-auto px-4 pb-24 min-h-screen overflow-y-auto">
@@ -173,36 +197,30 @@ export default function PortfolioPage() {
                         color="primary"
                         variant="bordered"
                         className="h-12"
-                        onClick={() => {
-                            if (!provider) {
-                                console.error('Error: Provider is not initialized.');
-                                return;
-                            }
+                        onPress={onOpen}>
+                        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                            <ModalContent>
+                                {(onClose) => (
+                                    <>
+                                        <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+                                        <ModalBody>
+                                            <h2 id="modal-title" className="text-xl font-semibold mb-4">Select an Action</h2>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                <Button color="primary" className="w-full">Deposit</Button>
+                                                <Button color="primary" variant="bordered" className="w-full"  onClick={() => handleSwap()}>Swap</Button>
+                                                <Button color="primary" className="w-full">Onramp</Button>
+                                            </div>
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            <Button color="danger" variant="light" onPress={onClose}>
+                                                Close
+                                            </Button>
+                                        </ModalFooter>
+                                    </>
+                                )}
+                            </ModalContent>
+                        </Modal>
 
-                            setIsLoading(true); // Affiche l'état "Processing..."
-                            handleAction(provider, isApproved)
-                                .then((response) => {
-                                    console.log(isApproved ? 'Deposit successful' : 'Approval successful', response);
-
-                                    // Passe à l'étape suivante si nécessaire
-                                    if (!isApproved) {
-                                        setIsApproved(true);
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.error('Action failed:', error);
-                                })
-                                .finally(() => {
-                                    setIsLoading(false); // Réinitialise l'état de chargement
-                                });
-                        }}
-                        disabled={isLoading} // Désactive le bouton pendant l'exécution
-                    >
-                        {isLoading
-                            ? 'Processing...' // Texte pendant l'exécution
-                            : isApproved
-                                ? 'Deposit' // Texte après approbation
-                                : 'Approve'}
                     </Button>
                     <Button
                         startContent={<ArrowUpFromLine size={20} />}
@@ -242,6 +260,6 @@ export default function PortfolioPage() {
 
             {/* Add bottom padding to account for mobile navigation */}
             <div className="h-16" />
-        </div>
+        </div >
     );
 }
