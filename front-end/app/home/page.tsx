@@ -1,12 +1,36 @@
 'use client';
 import { useState } from 'react';
-import { Card, CardBody, Input, Button, Tabs, Tab } from "@nextui-org/react";
+import { Card, CardBody, Input, Button, Tabs, Tab, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { Search, TrendingUp, Trophy, LandPlot } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function HomePage() {
     const router = useRouter();
     const [selectedCategory, setSelectedCategory] = useState('finance');
+    const [selectedChain, setSelectedChain] = useState({
+        name: 'Ethereum',
+        icon: '/ethereum.png',
+        id: 'ethereum'
+    });
+
+    const chains = [
+        {
+            name: 'Ethereum',
+            icon: '/ethereum.png',
+            id: 'ethereum'
+        },
+        {
+            name: 'Chiliz',
+            icon: '/chiliz.png',
+            id: 'chiliz'
+        },
+        {
+            name: 'Rootstock',
+            icon: '/rootstock.png',
+            id: 'rootstock'
+        }
+    ];
 
     const markets = {
         finance: [
@@ -90,8 +114,54 @@ export default function HomePage() {
 
     return (
         <div className="max-w-4xl mx-auto pt-6 px-4">
-            {/* Title */}
-            <h1 className="text-3xl font-bold text-center mb-8">AnonMarket</h1>
+            {/* Header with Title and Chain Selector */}
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold">AnonMarket</h1>
+                
+                <Dropdown>
+                    <DropdownTrigger>
+                        <Button 
+                            isIconOnly
+                            className="bg-white/70 backdrop-blur-lg w-12 h-12"
+                            variant="bordered"
+                        >
+                            <div className="relative w-6 h-6">
+                                <Image
+                                    src={selectedChain.icon}
+                                    alt={selectedChain.name}
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                        </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu 
+                        aria-label="Chain Selection"
+                        onAction={(key) => {
+                            const chain = chains.find(c => c.id === key);
+                            if (chain) setSelectedChain(chain);
+                        }}
+                    >
+                        {chains.map((chain) => (
+                            <DropdownItem
+                                key={chain.id}
+                                startContent={
+                                    <div className="relative w-5 h-5 mr-2">
+                                        <Image
+                                            src={chain.icon}
+                                            alt={chain.name}
+                                            fill
+                                            className="object-contain"
+                                        />
+                                    </div>
+                                }
+                            >
+                                {chain.name}
+                            </DropdownItem>
+                        ))}
+                    </DropdownMenu>
+                </Dropdown>
+            </div>
             
             {/* Search Bar */}
             <div className="mb-8">
