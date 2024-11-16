@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import NavBar from '@/components/NavBar';
 import { ChainSelector } from '@/components/ux/ChainSelector';
-import { markets } from '@/data/market';
+import { availableMarkets, portefolioMarkets } from '@/data/markets';
 
 export default function HomePage() {
     const router = useRouter();
@@ -85,7 +85,7 @@ export default function HomePage() {
 
                 {/* Market Cards */}
                 <div className="grid grid-cols-1 gap-4">
-                    {markets[selectedCategory as keyof typeof markets].map((market) => (
+                    {availableMarkets[selectedCategory as keyof typeof availableMarkets].map((market) => (
                         <Card
                             key={market.id}
                             isPressable

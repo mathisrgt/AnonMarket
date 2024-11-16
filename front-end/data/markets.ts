@@ -1,4 +1,4 @@
-export const markets = {
+export const availableMarkets = {
     finance: [
         {
             id: 0,
@@ -62,5 +62,49 @@ export const markets = {
             ]
         },
         // ... other politics markets
+    ]
+};
+
+export const portefolioMarkets = {
+    balance: '1,234.56',
+    currentPositions: [
+        {
+            title: "Bitcoin Price Above $100K",
+            prediction: "Yes",
+            amount: "$100.00",
+            odds: "1.95",
+            potentialWin: "$195.00",
+            endDate: "Dec 31, 2025",
+            status: "active"
+        },
+        {
+            title: "US Presidential Election",
+            prediction: "Trump",
+            amount: "$50.00",
+            odds: "1.85",
+            potentialWin: "$92.50",
+            endDate: "Nov 5, 2024",
+            status: "active"
+        },
+    ],
+    pastPositions: [
+        {
+            title: "FIFA World Cup 2022",
+            prediction: "Argentina",
+            amount: "$75.00",
+            odds: "2.10",
+            potentialWin: "$157.50",
+            endDate: "Dec 18, 2022",
+            status: "won"
+        },
+        {
+            title: "ETH Price Above $3K",
+            prediction: "Yes",
+            amount: "$60.00",
+            odds: "1.75",
+            potentialWin: "$105.00",
+            endDate: "Jan 1, 2024",
+            status: "lost"
+        },
     ]
 };

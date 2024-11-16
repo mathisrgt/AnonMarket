@@ -7,26 +7,10 @@ import { Key, useState } from "react";
 import { createWalletClient, createPublicClient, custom, formatEther, parseUnits, encodeFunctionData, parseEther } from 'viem'
 import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
 import handleSwap from "@/services/handleSwap"
-import { mainnet, polygonAmoy, sepolia, baseSepolia } from 'viem/chains'
 import { handleApproveAction, handleDepositAction } from "../../services/viemEscrow";
-import { sendTransaction } from "viem/actions";
-import { IProvider } from "@web3auth/base";
 import NavBar from "@/components/NavBar";
-
-export const getViewChain = (provider: IProvider) => {
-    switch (provider.chainId) {
-        case "1":
-            return mainnet;
-        case "0x13882":
-            return polygonAmoy;
-        case "0xaa36a7":
-            return sepolia;
-        case "0x14A34":
-            return baseSepolia;
-        default:
-            return mainnet;
-    }
-}
+import { getViewChain } from "@/services/viemRPC";
+import { portefolioMarkets } from "@/data/markets";
 
 export default function PortfolioPage() {
     const router = useRouter();
@@ -39,50 +23,6 @@ export default function PortfolioPage() {
 
     const [isApproved, setIsApproved] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-
-    const portfolio = {
-        balance: '1,234.56',
-        currentPositions: [
-            {
-                title: "Bitcoin Price Above $100K",
-                prediction: "Yes",
-                amount: "$100.00",
-                odds: "1.95",
-                potentialWin: "$195.00",
-                endDate: "Dec 31, 2025",
-                status: "active"
-            },
-            {
-                title: "US Presidential Election",
-                prediction: "Trump",
-                amount: "$50.00",
-                odds: "1.85",
-                potentialWin: "$92.50",
-                endDate: "Nov 5, 2024",
-                status: "active"
-            },
-        ],
-        pastPositions: [
-            {
-                title: "FIFA World Cup 2022",
-                prediction: "Argentina",
-                amount: "$75.00",
-                odds: "2.10",
-                potentialWin: "$157.50",
-                endDate: "Dec 18, 2022",
-                status: "won"
-            },
-            {
-                title: "ETH Price Above $3K",
-                prediction: "Yes",
-                amount: "$60.00",
-                odds: "1.75",
-                potentialWin: "$105.00",
-                endDate: "Jan 1, 2024",
-                status: "lost"
-            },
-        ]
-    };
 
     const handlePositionClick = (position: any) => {
         localStorage.setItem('previousPage', '/portfolio');
@@ -217,7 +157,7 @@ export default function PortfolioPage() {
                                     className="object-contain"
                                 />
                             </div>
-                            <span className="text-3xl font-bold">${portfolio.balance}</span>
+                            <span className="text-3xl font-bold">${portefolioMarkets.balance}</span>
                         </div>
                     </CardBody>
                 </Card>
@@ -279,12 +219,12 @@ export default function PortfolioPage() {
                 >
                     <Tab key="current" title="Current">
                         <div className="w-full">
-                            {renderPositions(portfolio.currentPositions, true)}
+                            {renderPositions(portefolioMarkets.currentPositions, true)}
                         </div>
                     </Tab>
                     <Tab key="past" title="Past">
                         <div className="w-full">
-                            {renderPositions(portfolio.pastPositions, false)}
+                            {renderPositions(portefolioMarkets.pastPositions, false)}
                         </div>
                     </Tab>
                 </Tabs>
