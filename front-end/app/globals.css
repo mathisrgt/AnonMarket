@@ -2,4 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #007AFF;
+}
+
+body {
+  @apply bg-gray-50;
+}
+
+.hover\:text-primary:hover {
+  color: var(--primary);
+}
+
 
