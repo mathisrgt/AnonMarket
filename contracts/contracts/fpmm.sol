@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+//import "../risc_zero_lsag_verifier/contracts/LsagVerifier.sol";
+
 contract FPMM {
     uint256 public constant MAX_SPENDING_LIMIT = 10; // 10 USDC
 
     address public owner;
     mapping(uint256 => Market) public markets; // Store market data by market_id (changed to uint256)
-    mapping(uint256 => mapping(uint256 => mapping(uint256 => uint256))) public userShares; // Changed marketId to uint256
+    mapping(uint256 => mapping(bytes32 => mapping(uint256 => uint256))) public userShares; // Changed marketId to uint256
 
-    mapping(uint256 => uint256) public totalSpent; // Track total funds spent by each key_image
+    mapping(bytes32 => uint256) public totalSpent; // Track total funds spent by each key_image
 
     event LiquidityAdded(address indexed provider, uint256 amountX, uint256 amountY, uint256 indexed marketId);
     event LiquidityRemoved(address indexed provider, uint256 amountX, uint256 amountY, uint256 indexed marketId);
@@ -54,7 +56,20 @@ contract FPMM {
         emit LiquidityRemoved(msg.sender, amountX, amountY, marketId);
     }
 
-    function verifyRingSignature(string memory message, uint256 keyImage) internal pure returns (bool) {
+
+        // function verifySignature(
+        //     bytes calldata seal,
+        //     bytes calldata journal,
+        //     LsagVerifier.RingSignatureData memory ringSignatureData
+        // ) public view returns (bool) {
+        //     try lsagVerifier.verifyRs(seal, journal, ringSignatureData) {
+        //         return true;
+        //     } catch {
+        //         return false;
+        //     }
+        // }
+
+    function verifyRingSignature(string memory message, bytes32 keyImage) internal pure returns (bool) {
         // Implement actual ring signature verification here
         return true;
     }
@@ -63,7 +78,8 @@ contract FPMM {
         uint256 inputAmount,
         uint256 outcome,
         string memory message,
-        uint256 keyImage,
+        string memory signature,
+        bytes32 keyImage,
         uint256 marketId
     ) external returns (uint256 outputAmount) {
         Market storage market = markets[marketId];
@@ -113,7 +129,7 @@ contract FPMM {
         }
     }
 
-    function calculateUserGain(uint256 outcome, uint256 keyImage, uint256 marketId) external view returns (uint256 userGain) {
+    function calculateUserGain(uint256 outcome, bytes32 keyImage, uint256 marketId) external view returns (uint256 userGain) {
         uint256 shares = userShares[marketId][keyImage][outcome];
         require(shares > 0, "User has no shares for this outcome");
 
@@ -135,13 +151,13 @@ contract FPMM {
         return (market.reserveX, market.reserveY);
     }
 
-    function getTotalSpent(uint256 keyImage) external view returns (uint256) {
+    function getTotalSpent(bytes32 keyImage) external view returns (uint256) {
         return totalSpent[keyImage];
     }
 
     function getUserShares(
         uint256 marketId,
-        uint256 keyImage,
+        bytes32 keyImage,
         uint256 outcome
     ) external view returns (uint256) {
         return userShares[marketId][keyImage][outcome];

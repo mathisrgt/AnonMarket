@@ -4,8 +4,8 @@ import { ethers } from "hardhat";
 async function main() {
 
     // Deploying ERC20 Claimable Token
-    const FPMM = await ethers.getContractFactory("FPMM");
-    const fpmm = await FPMM.deploy();
+    const FPMM = await ethers.getContractFactory("combineOracle");
+    const fpmm = await FPMM.deploy("0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43");
     console.log((fpmm as any).target);
 }
 

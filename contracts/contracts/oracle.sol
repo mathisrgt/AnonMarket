@@ -4,11 +4,9 @@ pragma solidity ^0.8.0;
 
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
-import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 contract OracleMarket {
     IPyth pyth;
-    AggregatorV3Interface internal dataFeed;
 
     // Counter for automatic market IDs
     uint256 public nextMarketId = 1;
@@ -40,15 +38,9 @@ contract OracleMarket {
 
     /**
      * @param pythContract The address of the Pyth contract
-     * Network: Sepolia
-     * Aggregator: BTC/USD
-     * Address: 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43
      */
     constructor(address pythContract) {
         pyth = IPyth(pythContract);
-        dataFeed = AggregatorV3Interface(
-            0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43
-        );
     }
 
     /**
@@ -110,17 +102,9 @@ contract OracleMarket {
         // Convert the price to a human-readable value
         uint256 readablePrice = uint256(uint64(price.price)) / scalingFactor;
 
-        // Retrieve Chainlink price and handle potential negatives
-        int256 chainlinkPrice = getChainlinkDataFeedLatestAnswer();
-        require(chainlinkPrice >= 0, "Invalid Chainlink price"); // Ensure non-negative value
-        uint256 chainlinkPriceUnsigned = uint256(chainlinkPrice);
-
         // Resolve the market (0 for Trump, 1 for Harris, 2 for None)
         if (readablePrice > 0) {
-            if (
-                readablePrice > market.threshold &&
-                readablePrice > chainlinkPriceUnsigned
-            ) {
+            if (readablePrice > market.threshold) {
                 marketResults[marketId] = 1; // Harris
             } else {
                 marketResults[marketId] = 0; // Trump
@@ -155,17 +139,12 @@ contract OracleMarket {
     }
 
     /**
-     * Returns the latest answer.
+     * @notice Checks if a market is finished.
+     * @param marketId The ID of the market.
+     * @return A boolean indicating if the market is finished.
      */
-    function getChainlinkDataFeedLatestAnswer() public view returns (int256) {
-        // prettier-ignore
-        (
-            /* uint80 roundID */,
-            int answer,
-            /*uint startedAt*/,
-            /*uint timeStamp*/,
-            /*uint80 answeredInRound*/
-        ) = dataFeed.latestRoundData();
-        return answer;
+    function isMarketFinished(uint256 marketId) public view returns (bool) {
+        require(markets[marketId].id != 0, "Market does not exist");
+        return markets[marketId].marketFinished;
     }
 }
