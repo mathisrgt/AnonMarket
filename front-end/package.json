@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cypher-laboratory/alicesring-lsag": "../Alice-s-Ring/packages/lsag-ts/dist",
+    "@cypher-laboratory/alicesring-lsag": "^0.1.2",
     "@nextui-org/react": "^2.4.8",
+    "@pythnetwork/hermes-client": "^1.2.0",
     "@web3auth/account-abstraction-provider": "^9.4.0",
     "@web3auth/base": "^9.4.0",
     "@web3auth/ethereum-provider": "^9.4.0",
