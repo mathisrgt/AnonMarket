@@ -105,6 +105,43 @@ const sendTransaction = async (provider: IProvider): Promise<any> => {
     }
 }
 
+export async function betOnChain(provider: IProvider): Promise<any> {
+    try {
+        const publicClient = createPublicClient({
+            chain: getViewChain(provider),
+            transport: custom(provider)
+        })
+
+        const walletClient = createWalletClient({
+            chain: getViewChain(provider),
+            transport: custom(provider)
+        });
+
+        // data for the transaction
+        const destination = "0x40e1c367Eca34250cAF1bc8330E9EddfD403fC56"; // TODO Change address
+        const amount = parseEther("0.0001");
+        const address = await walletClient.getAddresses();
+
+        // Submit transaction to the blockchain
+        const hash = await walletClient.sendTransaction({
+            account: address[0],
+            to: destination,
+            value: amount,
+        });
+
+        console.log(hash)
+        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+        return JSON.stringify(receipt, (key, value) =>
+            typeof value === 'bigint'
+                ? value.toString()
+                : value // return everything else unchanged
+        );
+    } catch (error) {
+        return error;
+    }
+}
+
 const signMessage = async (provider: IProvider): Promise<any> => {
     try {
         const walletClient = createWalletClient({
