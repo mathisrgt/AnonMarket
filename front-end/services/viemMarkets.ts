@@ -121,6 +121,15 @@ export const interactionAMM = async (
         );
 
         console.log('Signature:', signature);
+        // console.log('Signature Key Image:', signature.keyImage);
+        // const serializedAddress = signature.keyImage.serialize();
+        // const ethAddress = signature.keyImage.toEthAddress();
+
+        // const keyImage = ethAddress;
+
+        // console.log("private_key:",process.env.PRIVATE_KEY);
+        // console.log("serializedAddress:",serializedAddress);
+        // console.log('Key Image:', keyImage);
 
         return { ring, signature, message };
     } catch (error) {
