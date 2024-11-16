@@ -4,7 +4,7 @@ import { Badge } from "@nextui-org/react";
 
 export default function MobileNav() {
     return (
-        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 px-6 py-3 z-50">
+        <nav className="md:hidden fixed bottom-4 left-4 right-4 bg-white/70 backdrop-blur-lg border border-gray-200 rounded-2xl px-6 py-3 z-50">
             <div className="flex justify-around items-center">
                 <NavLink href="/markets" icon={<Home size={20} />} label="Markets" />
                 <NavLink href="/converter" icon={<ArrowLeftRight size={20} />} label="Converter" />
