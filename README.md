@@ -47,6 +47,7 @@ AnonMarket leverages **state-of-the-art technologies** to create a seamless and 
 
 ### 🔒 **Backend**  
 - Deployed on **Ethereum**, **Base**, **Rootstock**, **Zircuit**, **Chiliz**, **Linea** and **Scroll**, ensuring immutability, transparency, and reliability.  
+  <a href="https://github.com/mathisrgt/AnonMarket/blob/main/contracts/scripts/deployAll.ts">**Look at the SmartContract chain deployment**</a>  
 - Custom smart contracts optimized for **low gas fees**, with batching mechanisms to reduce transaction costs.  
 
 ### 📡 **Oracles**  
@@ -106,7 +107,7 @@ Incorporating **Fusion+ from 1Inch** solved interoperability challenges, creatin
 We’re a group of passionate developers with a shared love for **blockchain innovation**:  
 
 - 👨‍💻 **[Mathis Sergent](https://linkedin.com/in/mathis-sergent/)**  
-  **Backend Developer** | 3+ years of experience | Passionate about scalable architectures | 10+ hackathons worldwide.  
+  **Backend Developer** | 4+ years of experience | Passionate about scalable architectures | 10+ hackathons worldwide.  
 
 - 👨‍💻 **[Mathieu Laruelle](https://linkedin.com/in/mathieu-laruelle/)**  
   **FullStack Developer** | 3+ years of experience | Expert in creating intuitive interfaces | Hackathon veteran.  
@@ -115,7 +116,7 @@ We’re a group of passionate developers with a shared love for **blockchain inn
   **UI/UX Designer** | 3+ years of experience | Focused on delivering seamless user experiences | Hackathon enthusiast.  
 
 - 👨‍💻 **[Charles-André Goichot](https://linkedin.com/in/charles-andr%C3%A9-goichot/)**  
-  **Blockchain Developer** | 3+ years of experience | Skilled in optimizing performance | Skilled problem solver.  
+  **Blockchain Developer** | 4+ years of experience | Skilled in optimizing performance | Skilled problem solver.  
 
 - 👨‍💻 **[Ewan Hamon](https://linkedin.com/in/ewan-hamon/)**  
   **Frontend Developer** | 4+ years of experience | Specialized in Rust & Smart Contracts | 10+ hackathons globally.  
