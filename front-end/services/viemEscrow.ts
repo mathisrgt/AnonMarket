@@ -7,6 +7,7 @@ import { Console } from 'console';
 import * as elliptic from 'elliptic';
 import { Hex, hexToBytes } from 'viem';
 import { RingSignature, Curve, CurveName, Point } from '@cypher-laboratory/alicesring-lsag';
+import { chainId } from '@/environment/blockchain';
 
 const curve = new Curve(CurveName.SECP256K1);
 
@@ -24,6 +25,7 @@ export async function handleApproveAction(provider: IProvider, publicClient: Pub
         console.log('Approve Transaction Data:', data);
 
         const hash = await walletClient.sendTransaction({
+            chain: undefined, // TODO
             to: usdcTokenAddress,
             data: data,
             value: BigInt(0),
@@ -70,6 +72,7 @@ export async function handleDepositAction(provider: IProvider, publicClient: Pub
         console.log('Deposit Transaction Data:', dataDeposit);
 
         const hash = await walletClient.sendTransaction({
+            chain: undefined, // TODO
             to: contractAddress_escrow,
             data: dataDeposit,
             value: BigInt(0),

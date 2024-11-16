@@ -11,6 +11,7 @@ import { mainnet, polygonAmoy, sepolia, baseSepolia } from 'viem/chains'
 import { handleApproveAction, handleDepositAction } from "../../services/viemEscrow";
 import { sendTransaction } from "viem/actions";
 import { IProvider } from "@web3auth/base";
+import NavBar from "@/components/NavBar";
 
 export const getViewChain = (provider: IProvider) => {
     switch (provider.chainId) {
@@ -266,23 +267,23 @@ export default function PortfolioPage() {
                 <Divider className="my-6" />
 
                 {/* Positions Header */}
-                <h2 className="text-xl font-semibold mb-4">My Positions</h2>
+                <h2 className="text-xl font-semibold">My Positions</h2>
             </div>
 
             {/* Scrollable Content */}
-            <div className="mt-4">
+            <div>
                 <Tabs
                     selectedKey={selectedTab}
                     onSelectionChange={(key) => setSelectedTab(key.toString())}
-                    className="mb-4"
+                    className="mb-2"
                 >
                     <Tab key="current" title="Current">
-                        <div className="mt-4 w-full">
+                        <div className="w-full">
                             {renderPositions(portfolio.currentPositions, true)}
                         </div>
                     </Tab>
                     <Tab key="past" title="Past">
-                        <div className="mt-4 w-full">
+                        <div className="w-full">
                             {renderPositions(portfolio.pastPositions, false)}
                         </div>
                     </Tab>
@@ -291,6 +292,7 @@ export default function PortfolioPage() {
 
             {/* Add bottom padding to account for mobile navigation */}
             <div className="h-16" />
+            <NavBar />
         </div >
     );
 }
