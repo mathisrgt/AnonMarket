@@ -138,4 +138,12 @@ contract FPMM {
     function getTotalSpent(uint256 keyImage) external view returns (uint256) {
         return totalSpent[keyImage];
     }
+
+    function getUserShares(
+        uint256 marketId,
+        uint256 keyImage,
+        uint256 outcome
+    ) external view returns (uint256) {
+        return userShares[marketId][keyImage][outcome];
+    }
 }
