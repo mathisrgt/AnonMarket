@@ -35,7 +35,7 @@ export default function HomePage() {
     const markets = {
         finance: [
             {
-                id: "btc-100k",
+                id: 0,
                 title: "Bitcoin Price Above $100K",
                 description: "Will Bitcoin reach $100,000 by the end of 2025?",
                 longDescription: "This market will resolve to 'Yes' if the price of Bitcoin (BTC) reaches or exceeds $100,000 USD on any major exchange before December 31st, 2025 23:59:59 UTC.",
@@ -49,7 +49,7 @@ export default function HomePage() {
                 ]
             },
             {
-                id: "tesla-sp500",
+                id: 1,
                 title: "Tesla Stock Performance",
                 description: "Will Tesla stock outperform S&P500 in 2024?",
                 longDescription: "This market will resolve to 'Yes' if Tesla's stock price percentage gain exceeds that of the S&P500 index for the year 2024.",
@@ -65,7 +65,7 @@ export default function HomePage() {
         ],
         sports: [
             {
-                id: "champions-league-2024",
+                id: 2,
                 title: "Champions League Winner",
                 description: "Who will win the 2024 UEFA Champions League?",
                 longDescription: "This market will resolve based on the winner of the 2024 UEFA Champions League final.",
@@ -82,7 +82,7 @@ export default function HomePage() {
         ],
         politics: [
             {
-                id: "us-election-2024",
+                id: 3,
                 title: "US Presidential Election",
                 description: "Who will win the 2024 US Presidential Election?",
                 longDescription: "This market will resolve based on the winner of the 2024 United States presidential election.",

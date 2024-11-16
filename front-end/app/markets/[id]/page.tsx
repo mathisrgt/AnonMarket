@@ -7,7 +7,7 @@ import { interactionAMM } from '../../../services/viemMarkets'; // Assurez-vous 
 import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
 
 interface Market {
-    id: string;
+    id: number;
     title: string;
     description: string;
     longDescription: string;
@@ -70,7 +70,7 @@ export default function MarketPage() {
             return;
         }
         try {
-            const marketId = parseInt(market.id, 10);
+            const marketId = market.id;
             const voteId = market.options.findIndex(option => option.label === selectedOption);
             const amountUsdc = shares;
             const claimed = 0;
