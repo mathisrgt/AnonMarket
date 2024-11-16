@@ -21,7 +21,7 @@ These markets help participants gauge trends, assess probabilities, and even sha
 AnonMarket combines **privacy, reliability, and accessibility** to redefine predictive markets:  
 
 ### 🛡️ **Privacy Beyond Limits**  
-- 🕵️‍♂️ With **Alice ring signatures**, user identities remain **anonymous** while maintaining blockchain transparency.  
+- 🕵️‍♂️ With **ring signatures**, user identities remain **anonymous** while maintaining blockchain transparency.  
 - 🔒 Ensures users can participate freely without compromising personal information.  
 
 ### 🔗 **Accurate and Trustworthy Resolutions**  
@@ -46,7 +46,7 @@ AnonMarket combines **privacy, reliability, and accessibility** to redefine pred
 AnonMarket leverages **state-of-the-art technologies** to create a seamless and efficient platform:  
 
 ### 🔒 **Backend**  
-- Deployed on **Ethereum**, **Base**, **Rootstock**, **Zircuit**, **Chiliz** **Linea** and **Scroll**, ensuring immutability, transparency, and reliability.  
+- Deployed on **Ethereum**, **Base**, **Rootstock**, **Zircuit**, **Chiliz**, **Linea** and **Scroll**, ensuring immutability, transparency, and reliability.  
 - Custom smart contracts optimized for **low gas fees**, with batching mechanisms to reduce transaction costs.  
 
 ### 📡 **Oracles**  
