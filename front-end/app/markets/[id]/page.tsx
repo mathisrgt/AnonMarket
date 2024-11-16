@@ -15,7 +15,7 @@ interface Market {
     options: Array<{ label: string; odds: string; }>;
 }
 
-export default function MarketPage({ params }: { params: { id: string } }) {
+export default function MarketPage() {
     const router = useRouter();
     const [market, setMarket] = useState<Market | null>(null);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -23,35 +23,44 @@ export default function MarketPage({ params }: { params: { id: string } }) {
     const [previousPage, setPreviousPage] = useState<string>('/home');
 
     useEffect(() => {
-        const storedMarket = localStorage.getItem('selectedMarket');
-        if (storedMarket) {
-            setMarket(JSON.parse(storedMarket));
-        }
-
-        const storedPreviousPage = localStorage.getItem('previousPage');
-        if (storedPreviousPage) {
-            setPreviousPage(storedPreviousPage);
+        try {
+            const storedMarket = localStorage.getItem('selectedMarket');
+            const storedPreviousPage = localStorage.getItem('previousPage');
+            
+            if (storedMarket) {
+                setMarket(JSON.parse(storedMarket));
+            }
+            if (storedPreviousPage) {
+                setPreviousPage(storedPreviousPage);
+            }
+        } catch (error) {
+            console.error('Error loading market data:', error);
         }
     }, []);
 
-    const handleBack = () => {
-        router.push(previousPage);
-    };
+    if (!market) {
+        return (
+            <div className="max-w-4xl mx-auto pt-6 px-4">
+                <button 
+                    onClick={() => router.push('/home')}
+                    className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
+                >
+                    <ArrowLeft size={20} />
+                    <span>Back</span>
+                </button>
+                <div>Loading market data...</div>
+            </div>
+        );
+    }
 
     const handleSharesChange = (increment: boolean) => {
-        setShares(prev => {
-            const newValue = increment ? prev + 1 : prev - 1;
-            return Math.max(1, newValue); // Prevent going below 1
-        });
+        setShares(prev => Math.max(1, increment ? prev + 1 : prev - 1));
     };
 
     const handleBuy = () => {
         if (!selectedOption) return;
-        // Handle purchase logic here
         console.log(`Buying ${shares} shares of ${selectedOption}`);
     };
-
-    if (!market) return null;
 
     // Calculate total cost
     const selectedOdds = market.options.find(opt => opt.label === selectedOption)?.odds;
@@ -61,7 +70,7 @@ export default function MarketPage({ params }: { params: { id: string } }) {
         <div className="max-w-4xl mx-auto pt-6 px-4 pb-24">
             {/* Back Button */}
             <button 
-                onClick={handleBack}
+                onClick={() => router.push(previousPage)}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
             >
                 <ArrowLeft size={20} />
