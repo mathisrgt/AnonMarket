@@ -15,12 +15,25 @@ interface Market {
     options: Array<{ label: string; odds: string; }>;
 }
 
+interface Position {
+    shares: number;
+    option: string;
+    purchasePrice: string;
+    potentialWin: string;
+}
+
 export default function MarketPage() {
     const router = useRouter();
     const [market, setMarket] = useState<Market | null>(null);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [shares, setShares] = useState(1);
     const [previousPage, setPreviousPage] = useState<string>('/home');
+    const [userPosition, setUserPosition] = useState<Position | null>({
+        shares: 2,
+        option: "Yes",
+        purchasePrice: "2.00",
+        potentialWin: "4.00"
+    });
 
     useEffect(() => {
         try {
@@ -160,6 +173,46 @@ export default function MarketPage() {
                     </Button>
                 )}
             </div>
+
+            {/* Current Position - add this at the bottom */}
+            {userPosition && (
+                <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-6 mt-6">
+                    <h2 className="text-xl font-semibold mb-4">Your Current Position</h2>
+                    <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-600">Option:</span>
+                            <span className="font-medium">{userPosition.option}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-600">Shares:</span>
+                            <span className="font-medium">{userPosition.shares}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-600">Purchase Price:</span>
+                            <span className="font-medium">${userPosition.purchasePrice}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-600">Potential Win:</span>
+                            <span className="font-medium text-green-600">${userPosition.potentialWin}</span>
+                        </div>
+                    </div>
+
+                    {/* Add Claim button if the market has ended */}
+                    {market.endDate && new Date(market.endDate) < new Date() && (
+                        <Button
+                            color="primary"
+                            variant="flat"
+                            className="w-full mt-4"
+                            onClick={() => {
+                                console.log('Claiming position');
+                                // Add claim logic here
+                            }}
+                        >
+                            Claim Position
+                        </Button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

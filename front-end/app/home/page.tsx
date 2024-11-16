@@ -211,24 +211,24 @@ export default function HomePage() {
             </Tabs>
 
             {/* Market Cards */}
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4">
                 {markets[selectedCategory as keyof typeof markets].map((market) => (
                     <Card 
                         key={market.id} 
                         isPressable
                         isHoverable
-                        className="bg-white/70 backdrop-blur-lg hover:bg-white/80 transition-all cursor-pointer"
+                        className="bg-white/70 backdrop-blur-lg hover:bg-white/80 transition-all cursor-pointer w-full"
                         onPress={() => handleMarketClick(market)}
                     >
                         <CardBody className="p-4">
                             <div className="flex justify-between items-start mb-2">
                                 <h3 className="font-semibold text-lg">{market.title}</h3>
-                                <span className="text-primary font-semibold">{market.odds}</span>
+                                <span className="text-primary font-semibold whitespace-nowrap ml-4">{market.odds}</span>
                             </div>
                             <p className="text-gray-600 text-sm mb-4">{market.description}</p>
                             <div className="flex justify-between text-xs text-gray-500">
                                 <span>Ends: {market.endDate}</span>
-                                <span>Volume: {market.volume}</span>
+                                <span className="ml-4">Volume: {market.volume}</span>
                             </div>
                         </CardBody>
                     </Card>
