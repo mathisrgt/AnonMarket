@@ -54,18 +54,98 @@ contract CombinedOracle is FunctionsClient, ConfirmedOwner {
 
     // JavaScript sources for different types of data
     mapping(uint256 => string) private sources;
-    string source1 = "const query = 'tennis alcaraz match';"; // ... (rest of source1)
-    string source2 = "const query = 'football france italy';"; // ... (rest of source2)
+    string source1 =
+        "const query = 'tennis alcaraz match';"
+        "const apiResponse = await Functions.makeHttpRequest({"
+        "  url: 'https://serpapi.com/search.json',"
+        "  params: {"
+        "    q: query,"
+        "    api_key: 'eaf2c806fedc4eed8f895b9e908f3e4e59fd54095a51a84d4621bd009fd9b476',"
+        "  },"
+        "});"
+        "if (apiResponse.error) {"
+        "  throw new Error('Failed to fetch match data from SerpAPI');"
+        "}"
+        "const { data } = apiResponse;"
+        "const sportsResults = data.sports_results?.tables?.games;"
+        "if (!sportsResults || sportsResults.length === 0) {"
+        "  throw new Error('No sports results found in API response');"
+        "}"
+        "const latestGame = sportsResults[0];"
+        "const players = latestGame.players;"
+        "if (!players || players.length !== 2) {"
+        "  throw new Error('Invalid player data in the response');"
+        "}"
+        "const alcaraz = players.find(player => player.name === 'C. Alcaraz');"
+        "if (!alcaraz) {"
+        "  throw new Error('Carlos Alcaraz data not found');"
+        "}"
+        "const alcarazSets = Object.values(alcaraz.sets).reduce("
+        "  (acc, set) => acc + parseInt(set.split(' ')[0]),"
+        "  0"
+        ");"
+        "const opponent = players.find(player => player.name !== 'C. Alcaraz');"
+        "const opponentSets = Object.values(opponent.sets).reduce("
+        "  (acc, set) => acc + parseInt(set.split(' ')[0]),"
+        "  0"
+        ");"
+        "const alcarazWon = alcarazSets > opponentSets;"
+        "return Functions.encodeString(JSON.stringify(alcarazWon));";
+
+    string source2 =
+        "const query = 'football france italy';"
+        "const apiResponse = await Functions.makeHttpRequest({"
+        "  url: 'https://serpapi.com/search.json',"
+        "  params: {"
+        "    q: query,"
+        "    api_key: 'eaf2c806fedc4eed8f895b9e908f3e4e59fd54095a51a84d4621bd009fd9b476',"
+        "  },"
+        "});"
+        "if (apiResponse.error) {"
+        "  throw new Error('Failed to fetch match data from SerpAPI');"
+        "}"
+        "const { data } = apiResponse;"
+        "const sportsResults = data.sports_results;"
+        "if (!sportsResults) {"
+        "  return Functions.encodeString('0'); // Match not done"
+        "}"
+        "const gameSpotlight = sportsResults.game_spotlight;"
+        "if (!gameSpotlight) {"
+        "  return Functions.encodeString('0'); // Match not done"
+        "}"
+        "const matchStatus = gameSpotlight.status || 'Not Done';"
+        "if (matchStatus.toLowerCase() !== 'final') {"
+        "  return Functions.encodeString('0'); // Match not done"
+        "}"
+        "const teams = gameSpotlight.teams;"
+        "if (!teams || teams.length !== 2) {"
+        "  throw new Error('Invalid team data');"
+        "}"
+        "const france = teams.find((team) => team.name.toLowerCase() === 'france');"
+        "const italy = teams.find((team) => team.name.toLowerCase() === 'italy');"
+        "if (!france || !italy) {"
+        "  throw new Error('France or Italy data missing');"
+        "}"
+        "const franceScore = france.score || 0;"
+        "const italyScore = italy.score || 0;"
+        "let result;"
+        "if (franceScore > italyScore) {"
+        "  result = 1; // France won"
+        "} else if (italyScore > franceScore) {"
+        "  result = 2; // Italy won"
+        "} else {"
+        "  result = 3; // Draw"
+        "}"
+        "return Functions.encodeString(JSON.stringify(result));";
 
     /**
      * @notice Initializes the contract with both Chainlink Functions and Price Feed capabilities
+     * @param router The address of the Functions router
      * @param aggregatorAddress The address of the price feed aggregator
-     * Address: 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43
      */
-    constructor(address aggregatorAddress)
-        FunctionsClient(router)
-        ConfirmedOwner(msg.sender)
-    {
+    constructor(
+        address aggregatorAddress
+    ) FunctionsClient(router) ConfirmedOwner(msg.sender) {
         dataFeed = AggregatorV3Interface(aggregatorAddress);
         sources[1] = source1;
         sources[2] = source2;
@@ -177,8 +257,7 @@ contract CombinedOracle is FunctionsClient, ConfirmedOwner {
     function getChainlinkDataFeedLatestAnswer() public view returns (int256) {
         (
             ,
-            /* uint80 roundID */
-            int256 answer, /uint startedAt/ /uint timeStamp/ /uint80 answeredInRound/
+            /* uint80 roundID */ int answer /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/,
             ,
             ,
 
