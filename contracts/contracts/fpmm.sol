@@ -1,27 +1,26 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 contract FPMM {
-    uint256 public reserveX;
-    uint256 public reserveY;
-    uint256 public k; // Invariant constant
+    uint256 public constant MAX_SPENDING_LIMIT = 10; // 10 USDC
+
     address public owner;
-    uint256 public creatorFunds;
-    uint256 public totalFunds;
-    uint256 public userSharesX;
-    uint256 public userSharesY;
+    mapping(uint256 => Market) public markets; // Store market data by market_id (changed to uint256)
+    mapping(uint256 => mapping(uint256 => mapping(uint256 => uint256))) public userShares; // Changed marketId to uint256
 
-    event LiquidityAdded(address indexed provider, uint256 amountX, uint256 amountY);
-    event LiquidityRemoved(address indexed provider, uint256 amountX, uint256 amountY);
-    event Swap(address indexed swapper, string outcome, uint256 inputAmount, uint256 outputAmount);
+    mapping(uint256 => uint256) public totalSpent; // Track total funds spent by each key_image
 
-    constructor(uint256 initialX, uint256 initialY) {
-        require(initialX > 0 && initialY > 0, "Initial reserves must be greater than zero");
-        reserveX = initialX;
-        reserveY = initialY;
-        k = reserveX * reserveY; // Set the invariant constant
-        owner = msg.sender;
-        creatorFunds = initialX + initialY; // Track initial creator funds
+    event LiquidityAdded(address indexed provider, uint256 amountX, uint256 amountY, uint256 indexed marketId);
+    event LiquidityRemoved(address indexed provider, uint256 amountX, uint256 amountY, uint256 indexed marketId);
+    event Swap(address indexed swapper, uint256 outcome, uint256 inputAmount, uint256 outputAmount, uint256 indexed marketId);
+
+    struct Market {
+        uint256 reserveX;
+        uint256 reserveY;
+        uint256 k; // Invariant constant
+        uint256 totalFunds;
+        uint256 totalSharesX;
+        uint256 totalSharesY;
     }
 
     modifier onlyOwner() {
@@ -29,80 +28,114 @@ contract FPMM {
         _;
     }
 
-    // Add liquidity to the FPMM
-    function addLiquidity(uint256 amountX, uint256 amountY) external onlyOwner {
-        reserveX += amountX;
-        reserveY += amountY;
-        k = reserveX * reserveY; // Update the invariant constant
-        creatorFunds += amountX + amountY; // Track only owner-added funds
-        emit LiquidityAdded(msg.sender, amountX, amountY);
+    constructor() {
+        owner = msg.sender;
     }
 
-    // Remove liquidity from the FPMM
-    function removeLiquidity(uint256 amountX, uint256 amountY) external onlyOwner {
-        require(reserveX >= amountX && reserveY >= amountY, "Insufficient liquidity");
-        reserveX -= amountX;
-        reserveY -= amountY;
-        k = reserveX * reserveY; // Update the invariant constant
-        creatorFunds -= amountX + amountY;
-        emit LiquidityRemoved(msg.sender, amountX, amountY);
+    function addLiquidity(uint256 amountX, uint256 amountY, uint256 marketId) external onlyOwner {
+        Market storage market = markets[marketId];
+        require(amountX > 0 && amountY > 0, "Amount must be greater than zero");
+        
+        market.reserveX += amountX;
+        market.reserveY += amountY;
+        market.k = market.reserveX * market.reserveY;
+
+        emit LiquidityAdded(msg.sender, amountX, amountY, marketId);
     }
 
-    // Swap function to swap shares of one outcome for another
-    function swap(uint256 inputAmount, string memory outcome) external returns (uint256 outputAmount) {
+    function removeLiquidity(uint256 amountX, uint256 amountY, uint256 marketId) external onlyOwner {
+        Market storage market = markets[marketId];
+        require(market.reserveX >= amountX && market.reserveY >= amountY, "Insufficient liquidity");
+
+        market.reserveX -= amountX;
+        market.reserveY -= amountY;
+        market.k = market.reserveX * market.reserveY;
+
+        emit LiquidityRemoved(msg.sender, amountX, amountY, marketId);
+    }
+
+    function verifyRingSignature(string memory message, uint256 keyImage) internal pure returns (bool) {
+        // Implement actual ring signature verification here
+        return true;
+    }
+
+    function swap(
+        uint256 inputAmount,
+        uint256 outcome,
+        string memory message,
+        uint256 keyImage,
+        uint256 marketId
+    ) external returns (uint256 outputAmount) {
+        Market storage market = markets[marketId];
         require(inputAmount > 0, "Input amount must be greater than zero");
+        require(verifyRingSignature(message, keyImage), "Invalid ring signature");
 
-        reserveX = reserveX + inputAmount;
-        reserveY = reserveY + inputAmount;
-        totalFunds += inputAmount; // Track user-contributed funds
+        market.reserveX += inputAmount;
+        market.reserveY += inputAmount;
+        market.totalFunds += inputAmount;
 
-        if (keccak256(abi.encodePacked(outcome)) == keccak256(abi.encodePacked("Y"))) {
-            uint256 newReserveY = k / reserveX;
-            outputAmount = reserveY - newReserveY;
-            reserveY = newReserveY;
-            userSharesY += outputAmount; // Track shares bought for outcome X
-        } else if (keccak256(abi.encodePacked(outcome)) == keccak256(abi.encodePacked("X"))) {
-            uint256 newReserveX = k / reserveY;
-            outputAmount = reserveX - newReserveX;
-            reserveX = newReserveX;
-            userSharesX += outputAmount; // Track shares bought for outcome Y
+        uint256 currentSpent = totalSpent[keyImage];
+        require(currentSpent + inputAmount <= MAX_SPENDING_LIMIT, "Spending limit exceeded");
+
+        totalSpent[keyImage] = currentSpent + inputAmount;
+
+        if (outcome == 1) {
+            uint256 newReserveY = market.k / market.reserveX; 
+            outputAmount = market.reserveY - newReserveY; 
+            market.reserveY = newReserveY;
+            market.totalSharesY += outputAmount;
+        } else if (outcome == 0) {
+            uint256 newReserveX = market.k / market.reserveY; 
+            outputAmount = market.reserveX - newReserveX; 
+            market.reserveX = newReserveX;
+            market.totalSharesX += outputAmount;
         } else {
             revert("Invalid outcome specified");
         }
 
-        emit Swap(msg.sender, outcome, inputAmount, outputAmount);
+        userShares[marketId][keyImage][outcome] += outputAmount;
+
+
+
+        emit Swap(msg.sender, outcome, inputAmount, outputAmount, marketId);
         return outputAmount;
     }
 
-    // Calculate the probability (price) for each outcome
-    function priceForOutcome(string memory outcome) public view returns (uint256) {
-        uint256 totalReserve = reserveX + reserveY;
-        if (keccak256(abi.encodePacked(outcome)) == keccak256(abi.encodePacked("X"))) {
-            return (reserveY * 1e18) / totalReserve; // Price for X in percentage * 1e18
-        } else if (keccak256(abi.encodePacked(outcome)) == keccak256(abi.encodePacked("Y"))) {
-            return (reserveX * 1e18) / totalReserve; // Price for Y in percentage * 1e18
+    function priceForOutcome(uint256 outcome, uint256 marketId) public view returns (uint256) {
+        Market storage market = markets[marketId];
+        uint256 totalReserve = market.reserveX + market.reserveY;
+        if (outcome == 0) {
+            return (market.reserveY * 1e18) / totalReserve;
+        } else if (outcome == 1) {
+            return (market.reserveX * 1e18) / totalReserve;
         } else {
             revert("Invalid outcome specified");
         }
     }
 
-    // Calculate user gain if an outcome wins
-    function calculateUserGain(uint256 outcomeIndex, uint256 userShares) external view returns (uint256 userGain) {
-        require(outcomeIndex == 0 || outcomeIndex == 1, "Invalid outcome index");
-        
+    function calculateUserGain(uint256 outcome, uint256 keyImage, uint256 marketId) external view returns (uint256 userGain) {
+        uint256 shares = userShares[marketId][keyImage][outcome];
+        require(shares > 0, "User has no shares for this outcome");
+
+        Market storage market = markets[marketId];
+
         uint256 payoutPerShare;
-        if (outcomeIndex == 0) {
-            payoutPerShare = totalFunds * 1e18 / userSharesX; // Amount per share
-            userGain = (userShares * payoutPerShare) / 1e18;
+        if (outcome == 0) {
+            payoutPerShare = market.totalFunds * 1e18 / market.totalSharesX; // Amount per share
+            userGain = (shares * payoutPerShare) / 1e18;
         } else {
-            payoutPerShare = totalFunds * 1e18 / userSharesY;
-            userGain = (userShares * payoutPerShare) / 1e18;
+            payoutPerShare = market.totalFunds * 1e18 / market.totalSharesY;
+            userGain = (shares * payoutPerShare) / 1e18;
         }
         return userGain;
     }
 
-    // Get reserves (public getter functions)
-    function getReserves() external view returns (uint256, uint256) {
-        return (reserveX, reserveY);
+    function getReserves(uint256 marketId) external view returns (uint256, uint256) {
+        Market storage market = markets[marketId];
+        return (market.reserveX, market.reserveY);
+    }
+
+    function getTotalSpent(uint256 keyImage) external view returns (uint256) {
+        return totalSpent[keyImage];
     }
 }

@@ -10,7 +10,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     await deploy('FPMM', {
         from: deployer,
-        args: [1000, 1000],
+        args: [],
         log: true,
     });
 };
