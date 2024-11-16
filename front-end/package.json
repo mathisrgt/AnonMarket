@@ -10,10 +10,16 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.8",
+    "@web3auth/account-abstraction-provider": "^9.4.0",
+    "@web3auth/base": "^9.4.0",
+    "@web3auth/ethereum-provider": "^9.4.0",
+    "@web3auth/modal": "^9.4.0",
     "framer-motion": "^11.11.17",
+    "lucide-react": "^0.460.0",
     "next": "15.0.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "viem": "^2.21.45"
   },
   "devDependencies": {
     "@types/node": "^20",
