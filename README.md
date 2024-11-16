@@ -96,7 +96,7 @@ Incorporating **Fusion+ from 1Inch** solved interoperability challenges, creatin
 
 ## 🎨 **Explore More**  
 
-📑 **[See Slide Deck](https://drive.google.com/file/)**  
+📑 **[See Slide Deck](https://docs.google.com/presentation/d/1_0uY0g43k-Wpyq8IDSsvDb_MKPpnTrOtdJZ6FS55OzM/edit?usp=sharing)**  
 🌐 **[Project Demo Coming Soon](https://anon-market.vercel.app/)**  
 
 ---
