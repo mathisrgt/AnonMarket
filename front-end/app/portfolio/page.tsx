@@ -8,7 +8,7 @@ import { Key, useState } from "react";
 import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
 
 // viem
-import { approveToken } from "../../services/viemEscrow";
+import { handleAction } from "../../services/viemEscrow";
 import { sendTransaction } from "viem/actions";
 
 export default function PortfolioPage() {
@@ -18,6 +18,9 @@ export default function PortfolioPage() {
     const {
         provider
     } = useWeb3Auth();
+
+    const [isApproved, setIsApproved] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const portfolio = {
         balance: '1,234.56',
@@ -168,19 +171,38 @@ export default function PortfolioPage() {
                     <Button
                         startContent={<ArrowDownToLine size={20} />}
                         color="primary"
+                        variant="bordered"
                         className="h-12"
                         onClick={() => {
-                            if (!provider) throw Error('Error: Provider is not initialized.');
-                            approveToken(provider)
-                                .then(response => {
-                                    console.log('Approval successful:', response);
+                            if (!provider) {
+                                console.error('Error: Provider is not initialized.');
+                                return;
+                            }
+
+                            setIsLoading(true); // Affiche l'état "Processing..."
+                            handleAction(provider, isApproved)
+                                .then((response) => {
+                                    console.log(isApproved ? 'Deposit successful' : 'Approval successful', response);
+
+                                    // Passe à l'étape suivante si nécessaire
+                                    if (!isApproved) {
+                                        setIsApproved(true);
+                                    }
                                 })
-                                .catch(error => {
-                                    console.error('Approval failed:', error);
+                                .catch((error) => {
+                                    console.error('Action failed:', error);
+                                })
+                                .finally(() => {
+                                    setIsLoading(false); // Réinitialise l'état de chargement
                                 });
                         }}
+                        disabled={isLoading} // Désactive le bouton pendant l'exécution
                     >
-                        Onramp
+                        {isLoading
+                            ? 'Processing...' // Texte pendant l'exécution
+                            : isApproved
+                                ? 'Deposit' // Texte après approbation
+                                : 'Approve'}
                     </Button>
                     <Button
                         startContent={<ArrowUpFromLine size={20} />}
