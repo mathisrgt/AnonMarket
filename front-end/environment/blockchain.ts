@@ -21,3 +21,13 @@ export const verifier_name = process.env.NEXT_PUBLIC_VERIFIER_NAME;
 if (process.env.NEXT_PUBLIC_PIMLINCO_APY_KEY === undefined)
     throw new Error('NEXT_PUBLIC_PIMLINCO_APY_KEY is undefined');
 export const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLINCO_APY_KEY;
+
+if (process.env.NEXT_PUBLIC_RPC_URL === undefined) {
+    throw new Error('NEXT_PUBLIC_RPC_URL is undefined');
+}
+export const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL;
+
+if (process.env.NEXT_PUBLIC_PRIVATE_KEY === undefined) {
+    throw new Error('NEXT_PUBLIC_PRIVATE_KEY is undefined');
+}
+export const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;

@@ -47,7 +47,7 @@ export default function MarketPage() {
             const storedMarket = localStorage.getItem('selectedMarket');
             const storedPreviousPage = localStorage.getItem('previousPage');
             console.log('Stored market:', storedMarket);
-            
+
             if (storedMarket) {
                 setMarket(JSON.parse(storedMarket));
             }
@@ -77,7 +77,7 @@ export default function MarketPage() {
 
             console.log("Paramètres InteractionAMM:", marketId, voteId, amountUsdc, claimed);
 
-            const result = await interactionAMM(
+            const { ring, signature, message } = await interactionAMM(
                 provider,
                 marketId,
                 voteId,
@@ -85,9 +85,39 @@ export default function MarketPage() {
                 claimed,
             );
 
-            console.log('Buy interaction result:', result);
+            console.log('InteractionAMM result:', { ring, signature, message });
+
+            const requestBody = {
+                message,
+                signature: signature.toBase64(),
+                inputAmount: amountUsdc,
+                outcome: voteId,
+                marketId,
+            };
+        
+            console.log('Request body:', requestBody);
+
+            // Effectuez la requête POST vers votre backend
+            const response = await fetch('/api/swap', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
+            console.log('Backend response:', response);
+
+            // Vérifiez la réponse du backend
+            if (!response.ok) {
+                const errorDetails = await response.json();
+                throw new Error(`Backend error: ${errorDetails.error}`);
+            }
+
+            const responseData = await response.json();
+            console.log('Transaction success:', responseData);
+
         } catch (error) {
-            console.error('Error during interaction:', error);
+            console.error('Error during interaction or backend call:', error);
         }
     };
 
@@ -97,7 +127,7 @@ export default function MarketPage() {
     if (!market) {
         return (
             <div className="max-w-4xl mx-auto pt-6 px-4">
-                <button 
+                <button
                     onClick={() => router.push('/home')}
                     className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
                 >
@@ -111,7 +141,7 @@ export default function MarketPage() {
 
     return (
         <div className="max-w-4xl mx-auto pt-6 px-4 pb-24">
-            <button 
+            <button
                 onClick={() => router.push(previousPage)}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
             >
@@ -122,7 +152,7 @@ export default function MarketPage() {
             <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-6 mb-6">
                 <h1 className="text-2xl font-bold mb-4">{market.title}</h1>
                 <p className="text-gray-600 mb-6">{market.description}</p>
-                
+
                 <div className="space-y-4 mb-6">
                     <div className="flex justify-between text-sm text-gray-500">
                         <span>End Date:</span>
