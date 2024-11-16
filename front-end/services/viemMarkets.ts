@@ -7,19 +7,7 @@ import { Console } from 'console';
 import * as elliptic from 'elliptic';
 import { Hex, hexToBytes } from 'viem';
 import { RingSignature, Curve, CurveName, Point } from '@cypher-laboratory/alicesring-lsag';
-
-const getViewChain = (provider: IProvider) => {
-    switch (provider.chainId) {
-        case "1":
-            return mainnet;
-        case "0x13882":
-            return polygonAmoy;
-        case "0xaa36a7":
-            return sepolia;
-        default:
-            return mainnet;
-    }
-}
+import { getViewChain } from './viemRPC';
 
 const curve = new Curve(CurveName.SECP256K1);
 

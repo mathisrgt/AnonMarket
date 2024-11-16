@@ -1,11 +1,25 @@
 import { createWalletClient, createPublicClient, custom, formatEther, parseEther } from 'viem'
-import { mainnet, polygonAmoy, sepolia } from 'viem/chains'
+import { mainnet, baseSepolia, sepolia, celoAlfajores, spicy, lineaSepolia, rootstockTestnet, zircuitTestnet } from 'viem/chains'
 import type { IProvider } from "@web3auth/base";
 
 export const getViewChain = (provider: IProvider) => {
     switch (provider.chainId) {
+        case "1":
+            return mainnet;
+        case "0x14A34": 
+            return baseSepolia;
         case "0xaa36a7":
             return sepolia;
+        case "0xaef3":
+            return celoAlfajores
+        case "0x15B42":
+            return spicy
+        case "0xe705":
+            return lineaSepolia
+        case "0x1f":
+            return rootstockTestnet
+        case "0xBF03":
+            return zircuitTestnet
         default:
             return sepolia;
     }

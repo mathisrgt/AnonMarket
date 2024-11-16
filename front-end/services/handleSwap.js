@@ -6,7 +6,6 @@ import { createWalletClient, createPublicClient, custom, formatEther, parseUnits
 import { usdcTokenAbi, usdcTokenAddress, contractAddress_escrow, contractABI_escrow } from '../components/constants';
 import Web3 from 'web3';
 import { RingSignature, Curve, CurveName, Point } from '@cypher-laboratory/alicesring-lsag';
-import { getViewChain } from "@/app/portfolio/page";
 
 const curve = new Curve(CurveName.SECP256K1);
 
