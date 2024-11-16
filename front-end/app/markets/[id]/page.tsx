@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, Minus, Plus } from 'lucide-react';
 import { Button } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
+import { interactionAMM } from '../../../services/viemMarkets'; // Assurez-vous du bon chemin d'importation
+import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
 
 interface Market {
-    id: string;
+    id: number;
     title: string;
     description: string;
     longDescription: string;
@@ -28,6 +30,7 @@ export default function MarketPage() {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [shares, setShares] = useState(1);
     const [previousPage, setPreviousPage] = useState<string>('/home');
+    const [publicKeys, setPublicKeys] = useState<string[]>([]);
     const [userPosition, setUserPosition] = useState<Position | null>({
         shares: 2,
         option: "Yes",
@@ -35,10 +38,15 @@ export default function MarketPage() {
         potentialWin: "4.00"
     });
 
+    const {
+        provider
+    } = useWeb3Auth();
+
     useEffect(() => {
         try {
             const storedMarket = localStorage.getItem('selectedMarket');
             const storedPreviousPage = localStorage.getItem('previousPage');
+            console.log('Stored market:', storedMarket);
             
             if (storedMarket) {
                 setMarket(JSON.parse(storedMarket));
@@ -50,6 +58,41 @@ export default function MarketPage() {
             console.error('Error loading market data:', error);
         }
     }, []);
+
+    const handleSharesChange = (increment: boolean) => {
+        setShares(prev => Math.max(1, increment ? prev + 1 : prev - 1));
+    };
+
+    const handleBuy = async () => {
+        if (!selectedOption || !market) return;
+        if (!provider) {
+            console.error('Error: Provider is not initialized.');
+            return;
+        }
+        try {
+            const marketId = market.id;
+            const voteId = market.options.findIndex(option => option.label === selectedOption);
+            const amountUsdc = shares;
+            const claimed = 0;
+
+            console.log("Paramètres InteractionAMM:", marketId, voteId, amountUsdc, claimed);
+
+            const result = await interactionAMM(
+                provider,
+                marketId,
+                voteId,
+                amountUsdc,
+                claimed,
+            );
+
+            console.log('Buy interaction result:', result);
+        } catch (error) {
+            console.error('Error during interaction:', error);
+        }
+    };
+
+    const selectedOdds = market?.options.find(opt => opt.label === selectedOption)?.odds;
+    const totalCost = shares * (selectedOdds ? parseFloat(selectedOdds) : 0);
 
     if (!market) {
         return (
@@ -66,22 +109,8 @@ export default function MarketPage() {
         );
     }
 
-    const handleSharesChange = (increment: boolean) => {
-        setShares(prev => Math.max(1, increment ? prev + 1 : prev - 1));
-    };
-
-    const handleBuy = () => {
-        if (!selectedOption) return;
-        console.log(`Buying ${shares} shares of ${selectedOption}`);
-    };
-
-    // Calculate total cost
-    const selectedOdds = market.options.find(opt => opt.label === selectedOption)?.odds;
-    const totalCost = shares * (selectedOdds ? parseFloat(selectedOdds) : 0);
-
     return (
         <div className="max-w-4xl mx-auto pt-6 px-4 pb-24">
-            {/* Back Button */}
             <button 
                 onClick={() => router.push(previousPage)}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
@@ -90,7 +119,6 @@ export default function MarketPage() {
                 <span>Back</span>
             </button>
 
-            {/* Market Details */}
             <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-6 mb-6">
                 <h1 className="text-2xl font-bold mb-4">{market.title}</h1>
                 <p className="text-gray-600 mb-6">{market.description}</p>
@@ -111,7 +139,6 @@ export default function MarketPage() {
                     <p className="text-sm text-gray-600">{market.longDescription}</p>
                 </div>
 
-                {/* Option Selection */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
                     {market.options.map((option) => (
                         <Button
@@ -130,10 +157,9 @@ export default function MarketPage() {
                     ))}
                 </div>
 
-                {/* Shares Selection */}
                 {selectedOption && (
                     <div className="mb-8">
-                        <h3 className="font-semibold mb-4">Number of Shares</h3>
+                        <h3 className="font-semibold mb-4">Number of USDC</h3>
                         <div className="flex items-center justify-center gap-4">
                             <Button
                                 isIconOnly
@@ -161,7 +187,6 @@ export default function MarketPage() {
                     </div>
                 )}
 
-                {/* Buy Button */}
                 {selectedOption && (
                     <Button
                         color="primary"
@@ -169,7 +194,7 @@ export default function MarketPage() {
                         className="w-full h-14"
                         onClick={handleBuy}
                     >
-                        Buy {shares} Share{shares > 1 ? 's' : ''} of {selectedOption}
+                        Buy {shares} Dollar{shares > 1 ? 's' : ''} of {selectedOption}
                     </Button>
                 )}
             </div>

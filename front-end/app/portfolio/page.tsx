@@ -5,14 +5,27 @@ import { ArrowDownToLine, ArrowUpFromLine } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Key, useState } from "react";
 
+import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
+
+// viem
+import { handleAction } from "../../services/viemEscrow";
+import { sendTransaction } from "viem/actions";
+
 export default function PortfolioPage() {
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState('current');
-    
+
+    const {
+        provider
+    } = useWeb3Auth();
+
+    const [isApproved, setIsApproved] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const portfolio = {
         balance: '1,234.56',
         currentPositions: [
-            { 
+            {
                 title: "Bitcoin Price Above $100K",
                 prediction: "Yes",
                 amount: "$100.00",
@@ -21,7 +34,7 @@ export default function PortfolioPage() {
                 endDate: "Dec 31, 2025",
                 status: "active"
             },
-            { 
+            {
                 title: "US Presidential Election",
                 prediction: "Trump",
                 amount: "$50.00",
@@ -62,22 +75,21 @@ export default function PortfolioPage() {
         return (
             <div className="grid grid-cols-1 gap-4 w-full">
                 {positions.map((position, index) => (
-                    <Card 
-                        key={index} 
+                    <Card
+                        key={index}
                         className="bg-white/70 backdrop-blur-lg w-full"
                     >
                         <CardBody className="p-4">
-                            <div 
+                            <div
                                 className="cursor-pointer"
                                 onClick={() => handlePositionClick(position)}
                             >
                                 <div className="flex justify-between items-start mb-3">
                                     <h3 className="font-semibold">{position.title}</h3>
-                                    <span className={`text-sm font-semibold whitespace-nowrap ml-4 ${
-                                        position.status === 'active' ? 'text-primary' :
+                                    <span className={`text-sm font-semibold whitespace-nowrap ml-4 ${position.status === 'active' ? 'text-primary' :
                                         position.status === 'won' ? 'text-green-600' :
-                                        position.status === 'lost' ? 'text-red-600' : ''
-                                    }`}>
+                                            position.status === 'lost' ? 'text-red-600' : ''
+                                        }`}>
                                         {position.status.charAt(0).toUpperCase() + position.status.slice(1)}
                                     </span>
                                 </div>
@@ -104,11 +116,11 @@ export default function PortfolioPage() {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             {/* Claim Button - only show for current positions */}
                             {isCurrent && (
                                 <div className="mt-4 pt-4 border-t border-gray-200">
-                                    <Button 
+                                    <Button
                                         color="primary"
                                         variant="flat"
                                         className="w-full"
@@ -159,9 +171,38 @@ export default function PortfolioPage() {
                     <Button
                         startContent={<ArrowDownToLine size={20} />}
                         color="primary"
+                        variant="bordered"
                         className="h-12"
+                        onClick={() => {
+                            if (!provider) {
+                                console.error('Error: Provider is not initialized.');
+                                return;
+                            }
+
+                            setIsLoading(true); // Affiche l'état "Processing..."
+                            handleAction(provider, isApproved)
+                                .then((response) => {
+                                    console.log(isApproved ? 'Deposit successful' : 'Approval successful', response);
+
+                                    // Passe à l'étape suivante si nécessaire
+                                    if (!isApproved) {
+                                        setIsApproved(true);
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error('Action failed:', error);
+                                })
+                                .finally(() => {
+                                    setIsLoading(false); // Réinitialise l'état de chargement
+                                });
+                        }}
+                        disabled={isLoading} // Désactive le bouton pendant l'exécution
                     >
-                        Onramp
+                        {isLoading
+                            ? 'Processing...' // Texte pendant l'exécution
+                            : isApproved
+                                ? 'Deposit' // Texte après approbation
+                                : 'Approve'}
                     </Button>
                     <Button
                         startContent={<ArrowUpFromLine size={20} />}
@@ -181,7 +222,7 @@ export default function PortfolioPage() {
 
             {/* Scrollable Content */}
             <div className="mt-4">
-                <Tabs 
+                <Tabs
                     selectedKey={selectedTab}
                     onSelectionChange={(key) => setSelectedTab(key.toString())}
                     className="mb-4"
