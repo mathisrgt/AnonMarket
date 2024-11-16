@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Home, Wallet, User, ArrowLeftRight } from 'lucide-react';
+import { Home, Wallet, User, ArrowLeftRight, LineChart } from 'lucide-react';
 import { Badge } from "@nextui-org/react";
 
 export default function DesktopNav() {
@@ -8,8 +8,8 @@ export default function DesktopNav() {
             <div className="flex items-center gap-8 max-w-7xl mx-auto w-full">
                 <Link href="/" className="text-xl font-bold">AnonMarket</Link>
                 <div className="flex gap-6 ml-auto">
-                    <NavLink href="/markets" icon={<Home size={20} />} label="Markets" />
-                    <NavLink href="/converter" icon={<ArrowLeftRight size={20} />} label="Converter" />
+                    <NavLink href="/home" icon={<Home size={20} />} label="Home" />
+                    <NavLink href="/markets" icon={<LineChart size={20} />} label="Markets" />
                     <Badge content="1" color="danger">
                         <NavLink href="/portfolio" icon={<Wallet size={20} />} label="Portfolio" />
                     </Badge>
