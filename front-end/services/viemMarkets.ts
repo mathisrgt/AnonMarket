@@ -33,12 +33,14 @@ export const getDepositPublicKey = async (
             transport: custom(provider),
         });
 
+        type EscrowData = [string[], string[]]
+
         // Lire les données du contrat via Viem
         const data = await publicClient.readContract({
             abi: contractABI_escrow,
             address: contractAddress_escrow,
             functionName: 'getDeposits10',
-        });
+        })  as EscrowData; 
 
         console.log('Deposits fetched:', data);
 
