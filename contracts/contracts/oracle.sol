@@ -4,9 +4,11 @@ pragma solidity ^0.8.0;
 
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts@1.2.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 contract OracleMarket {
     IPyth pyth;
+    AggregatorV3Interface internal dataFeed;
 
     // Counter for automatic market IDs
     uint256 public nextMarketId = 1;
@@ -38,9 +40,15 @@ contract OracleMarket {
 
     /**
      * @param pythContract The address of the Pyth contract
+     * Network: Sepolia
+     * Aggregator: BTC/USD
+     * Address: 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43
      */
     constructor(address pythContract) {
         pyth = IPyth(pythContract);
+        dataFeed = AggregatorV3Interface(
+            0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43
+        );
     }
 
     /**
@@ -102,9 +110,17 @@ contract OracleMarket {
         // Convert the price to a human-readable value
         uint256 readablePrice = uint256(uint64(price.price)) / scalingFactor;
 
+        // Retrieve Chainlink price and handle potential negatives
+        int256 chainlinkPrice = getChainlinkDataFeedLatestAnswer();
+        require(chainlinkPrice >= 0, "Invalid Chainlink price"); // Ensure non-negative value
+        uint256 chainlinkPriceUnsigned = uint256(chainlinkPrice);
+
         // Resolve the market (0 for Trump, 1 for Harris, 2 for None)
         if (readablePrice > 0) {
-            if (readablePrice > market.threshold) {
+            if (
+                readablePrice > market.threshold &&
+                readablePrice > chainlinkPriceUnsigned
+            ) {
                 marketResults[marketId] = 1; // Harris
             } else {
                 marketResults[marketId] = 0; // Trump
@@ -136,5 +152,20 @@ contract OracleMarket {
     function getPriceFeedId(uint256 index) public view returns (bytes32) {
         require(index < priceIds.length, "Invalid price feed index");
         return priceIds[index];
+    }
+
+    /**
+     * Returns the latest answer.
+     */
+    function getChainlinkDataFeedLatestAnswer() public view returns (int256) {
+        // prettier-ignore
+        (
+            /* uint80 roundID */,
+            int answer,
+            /*uint startedAt*/,
+            /*uint timeStamp*/,
+            /*uint80 answeredInRound*/
+        ) = dataFeed.latestRoundData();
+        return answer;
     }
 }
