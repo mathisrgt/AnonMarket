@@ -9,10 +9,7 @@ export default function DesktopNav() {
                 <Link href="/" className="text-xl font-bold">AnonMarket</Link>
                 <div className="flex gap-6 ml-auto">
                     <NavLink href="/home" icon={<Home size={20} />} label="Home" />
-                    <NavLink href="/markets" icon={<LineChart size={20} />} label="Markets" />
-                    <Badge content="1" color="danger">
-                        <NavLink href="/portfolio" icon={<Wallet size={20} />} label="Portfolio" />
-                    </Badge>
+                    <NavLink href="/portfolio" icon={<Wallet size={20} />} label="Portfolio" />
                     <NavLink href="/account" icon={<User size={20} />} label="Profile" />
                 </div>
             </div>
