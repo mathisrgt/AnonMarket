@@ -255,12 +255,13 @@ contract CombinedOracle is FunctionsClient, ConfirmedOwner {
      * @notice Gets the latest price feed answer
      */
     function getChainlinkDataFeedLatestAnswer() public view returns (int256) {
+        // prettier-ignore
         (
-            ,
-            /* uint80 roundID */ int answer /*uint startedAt*/ /*uint timeStamp*/ /*uint80 answeredInRound*/,
-            ,
-            ,
-
+            /* uint80 roundID */,
+            int answer,
+            /*uint startedAt*/,
+            /*uint timeStamp*/,
+            /*uint80 answeredInRound*/
         ) = dataFeed.latestRoundData();
         return answer;
     }
