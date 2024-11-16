@@ -2,4 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #007AFF;
+}
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: transparent;
+}
+
+/* Remove the previous bg-white styles and replace with this */
+.card-backdrop {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.hover\:text-primary:hover {
+  color: var(--primary);
+}
