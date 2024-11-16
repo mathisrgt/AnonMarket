@@ -106,19 +106,19 @@ Incorporating **Fusion+ from 1Inch** solved interoperability challenges, creatin
 We’re a group of passionate developers with a shared love for **blockchain innovation**:  
 
 - 👨‍💻 **[Mathis Sergent](https://linkedin.com/in/mathis-sergent/)**  
-  Full Stack Developer | 3+ years of experience | 10+ hackathons worldwide.  
+  **Backend Developer** | 3+ years of experience | Passionate about scalable architectures | 10+ hackathons worldwide.  
 
 - 👨‍💻 **[Mathieu Laruelle](https://linkedin.com/in/mathieu-laruelle/)**  
-  Full Stack Developer | 3+ years of experience | Hackathon veteran.  
+  **FullStack Developer** | 3+ years of experience | Expert in creating intuitive interfaces | Hackathon veteran.  
 
-- 👨‍💻 **[Marc Bertholat](https://linkedin.com/in/marcbertholat/)**  
-  Full Stack Developer | 3+ years of experience | Hackathon enthusiast.  
+- 🎨 **[Marc Bertholat](https://linkedin.com/in/marcbertholat/)**  
+  **UI/UX Designer** | 3+ years of experience | Focused on delivering seamless user experiences | Hackathon enthusiast.  
 
 - 👨‍💻 **[Charles-André Goichot](https://linkedin.com/in/charles-andr%C3%A9-goichot/)**  
-  Full Stack Developer | 3+ years of experience | Skilled problem solver.  
+  **Blockchain Developer** | 3+ years of experience | Skilled in optimizing performance | Skilled problem solver.  
 
 - 👨‍💻 **[Ewan Hamon](https://linkedin.com/in/ewan-hamon/)**  
-  Blockchain Specialist | 4+ years of experience | Rust & Smart Contracts | 10+ hackathons globally.  
+  **Frontend Developer** | 4+ years of experience | Specialized in Rust & Smart Contracts | 10+ hackathons globally.  
 
 ---
 
