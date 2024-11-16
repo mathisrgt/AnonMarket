@@ -11,6 +11,7 @@ import { mainnet, polygonAmoy, sepolia, baseSepolia } from 'viem/chains'
 import { handleApproveAction, handleDepositAction } from "../../services/viemEscrow";
 import { sendTransaction } from "viem/actions";
 import { IProvider } from "@web3auth/base";
+
 export const getViewChain = (provider: IProvider) => {
     switch (provider.chainId) {
         case "1":

@@ -2,6 +2,7 @@
 import { Card, CardBody } from "@nextui-org/react";
 import Image from 'next/image';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import NavBar from "@/components/NavBar";
 
 export default function MarketsPage() {
     const markets = [
@@ -12,7 +13,7 @@ export default function MarketsPage() {
     return (
         <div className="max-w-4xl mx-auto pt-6">
             <h1 className="text-2xl font-bold mb-6">Markets</h1>
-            
+
             <div className="grid gap-4">
                 {markets.map((market) => (
                     <Card key={market.symbol} className="bg-white shadow-sm hover:shadow-md transition-shadow">

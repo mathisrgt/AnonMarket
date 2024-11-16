@@ -7,6 +7,7 @@ import Providers from "./providers";
 import Background from "../components/Background";
 
 import { Funnel_Display } from "next/font/google";
+import NavBar from "@/components/NavBar";
 
 export const metadata: Metadata = {
   title: "AnonMarket",
@@ -24,10 +25,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <Background />
           <main className={`md:mt-16 mb-20 md:mb-0 px-4 relative ${funnelDisplay.className}`}>
             {children}
           </main>
+          <Background />
         </Providers>
       </body>
     </html>
