@@ -49,45 +49,58 @@ AnonMarket leverages **state-of-the-art technologies** to create a seamless and 
 
 ### 🔒 **Backend**  
 
-AnonMarket’s backend is a robust multi-chain architecture deployed on several blockchains to ensure **immutability, transparency, scalability, and reliability**. Each chain brings its unique strengths, catering to the diverse needs of our platform:  
+AnonMarket’s backend leverages a **multi-chain architecture** to deliver **scalability, transparency, and reliability** across various blockchain ecosystems. Each chain serves a unique purpose, ensuring seamless functionality and a tailored experience for users.  
 
-- **Escrow**  
-  - **Contract**: [Base Smart Contract](https://sepolia.etherscan.io/address/0x8fcaedd4478b7843a5f0757d90ebb9aa64e47e76)
- 
-- **AMM**  
-  - **Contract**: [Base Smart Contract](https://sepolia.etherscan.io/address/0x971A566C700bfb18C33D3536aFDE4cb89a9a6c62)
- 
-- **Oracle**  
-  - **Contract**: [Base Smart Contract](https://sepolia.etherscan.io/address/0x2F8e49D12718Dd2D996E51638B83180C03b59d2c)  
+#### 🚀 **Core Components**  
+
+- **Escrow Mechanism**  
+  Secure and transparent escrow services powered by immutable smart contracts.  
+  - **Contract**: [Escrow Smart Contract](https://sepolia.etherscan.io/address/0x8fcaedd4478b7843a5f0757d90ebb9aa64e47e76)  
+
+- **Automated Market Maker (AMM)**  
+  Efficiently manages liquidity and trades using optimized algorithms for low-cost transactions.  
+  - **Contract**: [AMM Smart Contract](https://sepolia.etherscan.io/address/0x971A566C700bfb18C33D3536aFDE4cb89a9a6c62)  
+
+- **Oracle Integration**  
+  Ensures accurate, real-time data resolution for markets via trusted oracles.  
+  - **Contract**: [Oracle Smart Contract](https://sepolia.etherscan.io/address/0x2F8e49D12718Dd2D996E51638B83180C03b59d2c)  
+
+---
+
+#### 🌐 **Blockchain Deployments**  
 
 - **Base**  
-  Optimized for scalability and low transaction costs, Base enhances accessibility for mass adoption by reducing gas fees.  
+  A scalable and cost-efficient Layer 2 solution designed to lower entry barriers for users.  
   - **Contract**: [Base Smart Contract](https://rootstock-testnet.blockscout.com/address/0x1a548aD9D7e13fD3011Bd659B486CE27AC6E3CB9#code)  
 
 - **Rootstock (RSK)**  
-  A Bitcoin sidechain, Rootstock combines Bitcoin’s security with smart contract capabilities, enabling Bitcoin-native users to access AnonMarket seamlessly.  
+  Combining Bitcoin’s security with smart contract capabilities, enabling seamless integration for Bitcoin-native users.  
   - **Contract**: [Rootstock Smart Contract](https://rootstock-testnet.blockscout.com/address/0x1a548aD9D7e13fD3011Bd659B486CE27AC6E3CB9#code)  
 
 - **Zircuit**  
-  As a cutting-edge privacy-focused chain, Zircuit supports advanced cryptographic methods like zero-knowledge proofs, enhancing user anonymity in sensitive markets.  
+  Focused on privacy-first solutions, Zircuit enhances anonymity through advanced cryptographic methods like zero-knowledge proofs.  
   - **Contract**: [Zircuit Smart Contract](https://rootstock-testnet.blockscout.com/address/0x1a548aD9D7e13fD3011Bd659B486CE27AC6E3CB9#code)  
 
 - **Chiliz**  
-  Designed for sports and entertainment, Chiliz enables easy integration with prediction markets for major events such as games, tournaments, and elections.  
+  Tailored for sports and entertainment, facilitating prediction markets for global events and tournaments.  
   - **Contract**: [Chiliz Smart Contract](https://rootstock-testnet.blockscout.com/address/0x1a548aD9D7e13fD3011Bd659B486CE27AC6E3CB9#code)  
 
 - **Linea**  
-  Linea is an Ethereum Layer 2 scaling solution offering faster transactions and reduced fees while inheriting Ethereum’s security. Ideal for onboarding users at scale.  
+  A Layer 2 scaling solution offering reduced gas fees and faster transactions while leveraging Ethereum’s robust security.  
   - **Contract**: [Linea Smart Contract](https://sepolia.lineascan.build/address/address/0xE7037f0742360A7A82554102058A48F3c7751C64#code)  
 
 - **Scroll**  
-  Scroll is a zkEVM-compatible Layer 2 solution, providing robust security and low-latency transactions, making it perfect for high-throughput scenarios.  
+  A zkEVM-compatible Layer 2 designed for high-throughput scenarios, ensuring low-latency and robust security.  
   - **Contract**: [Scroll Smart Contract](https://rootstock-testnet.blockscout.com/address/0x1a548aD9D7e13fD3011Bd659B486CE27AC6E3CB9#code)  
 
-These multi-chain deployments ensure that AnonMarket users can benefit from **high performance, low costs, and strong security** regardless of their preferred blockchain.  
+---
 
-  <a href="https://github.com/mathisrgt/AnonMarket/blob/main/contracts/scripts/deployAll.ts">**Look at the SmartContract chain deployment**</a>  
-- Custom smart contracts optimized for **low gas fees**, with batching mechanisms to reduce transaction costs.  
+### 🛠️ **Optimizations**  
+Custom-built smart contracts ensure **low gas fees** through batching mechanisms and advanced optimizations.  
+
+👉 **[Explore Smart Contract Deployment](https://github.com/mathisrgt/AnonMarket/blob/main/contracts/scripts/deployAll.ts)**  
+
+AnonMarket’s backend architecture guarantees **strong security, low costs, and high performance**, enabling a seamless user experience across multiple chains.  
 
 ### 📡 **Oracles**  
 - Uses **Chainlink** and **Pyth** for trusted event data, ensuring accurate market resolutions.  
