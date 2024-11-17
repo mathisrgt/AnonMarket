@@ -1,7 +1,7 @@
 'use client';
 import { Card, CardBody, Button, Divider, Tabs, Tab, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, } from "@nextui-org/react";
 import Image from 'next/image';
-import { ArrowDownToLine, ArrowUpFromLine } from 'lucide-react';
+import { ArrowDownToLine, ArrowRightLeft, ArrowUpFromLine, CreditCard, Download } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Key, useState } from "react";
 import { createWalletClient, createPublicClient, custom, formatEther, parseUnits, encodeFunctionData, parseEther } from 'viem'
@@ -170,24 +170,23 @@ export default function PortfolioPage() {
                         variant="bordered"
                         className="h-12"
                         onPress={onOpen}>
-                        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                        <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
                             <ModalContent>
-                                {(onClose) => (
+                                {() => (
                                     <>
-                                        <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+                                        <ModalHeader className="flex flex-col gap-1">Fund your account</ModalHeader>
                                         <ModalBody>
-                                            <h2 id="modal-title" className="text-xl font-semibold mb-4">Select an Action</h2>
-                                            <div className="grid grid-cols-1 gap-4">
-                                                <Button color="primary" className="w-full">Deposit</Button>
-                                                <Button color="primary" variant="bordered" className="w-full" onClick={() => (handleDepositInescrow())}>Swap</Button>
-                                                <Button color="primary" className="w-full">Onramp</Button>
+                                            <div className="grid grid-cols-1 gap-4 h-[210px]">
+                                                <Button color="primary" className="w-full bg-black" size="lg"><Download /> Deposit</Button>
+                                                <Button color="primary" variant="bordered" className="w-full border-black text-black" size="lg" onClick={() => (handleDepositInescrow())}>
+                                                    <ArrowRightLeft />Swap
+                                                </Button>
+                                                <Button color="primary" className="w-full bg-black" size="lg">
+                                                    <CreditCard />
+                                                    Buy
+                                                </Button>
                                             </div>
                                         </ModalBody>
-                                        <ModalFooter>
-                                            <Button color="danger" variant="light" onPress={onClose}>
-                                                Close
-                                            </Button>
-                                        </ModalFooter>
                                     </>
                                 )}
                             </ModalContent>
