@@ -1,12 +1,10 @@
-Here is an updated version of the readme with the use cases for **Ring Signatures**:
-
----
-
 # 🔗 **AnonMarket** (Eth Global Bangkok 2024) 🌍  
+  
 
 <h4 align="center">  
- 🎥 <a href="https://youtu.be/">**Watch Video Walkthrough**</a>  
+ 🎥 <a href="https://www.youtube.com/watch?v=lrAvW4_3MSg/">**Watch Video Walkthrough**</a>  
 </h4>  
+
 
 ---
 
