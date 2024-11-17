@@ -101,25 +101,17 @@ export default function PortfolioPage() {
             return;
         }
 
-        const publicClient = createPublicClient({
-            chain: getViewChain(provider),
-            transport: custom(provider),
-        });
 
-        const walletClient = createWalletClient({
-            chain: getViewChain(provider),
-            transport: custom(provider),
-        });
 
         try {
             setIsLoading(true); // Démarrage du chargement
 
             // Étape 1: Approbation
-            const approvalResponse = await handleApproveAction(provider, publicClient, walletClient);
+            const approvalResponse = await handleApproveAction(provider);
             console.log('Approval successful:', approvalResponse);
 
             // Étape 2: Dépôt
-            const depositResponse = await handleDepositAction(provider, publicClient, walletClient);
+            const depositResponse = await handleDepositAction(provider);
             console.log('Deposit successful:', depositResponse);
 
             // Met à jour l'état d'approbation
@@ -153,7 +145,7 @@ export default function PortfolioPage() {
         });
 
         await handleSwap(provider, publicClient, walletClient)
-        await handleApproveAction(provider, publicClient, walletClient)
+        await handleApproveAction(provider)
             .then((response) => {
                 console.log(isApproved ? 'Deposit successful' : 'Approval successful', response);
             })
@@ -163,7 +155,7 @@ export default function PortfolioPage() {
             .finally(() => {
                 setIsLoading(false); // Réinitialise l'état de chargement
             });
-        await handleDepositAction(provider, publicClient, walletClient)
+        await handleDepositAction(provider)
             .then((response) => {
                 console.log(isApproved ? 'Deposit successful' : 'Approval successful', response);
             })

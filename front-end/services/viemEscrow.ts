@@ -8,11 +8,22 @@ import * as elliptic from 'elliptic';
 import { Hex, hexToBytes } from 'viem';
 import { RingSignature, Curve, CurveName, Point } from '@cypher-laboratory/alicesring-lsag';
 import { chainId } from '@/environment/blockchain';
+import { getViewChain } from './viemRPC';
 
 const curve = new Curve(CurveName.SECP256K1);
 
-export async function handleApproveAction(provider: IProvider, publicClient: PublicClient, walletClient: WalletClient): Promise<any> {
+export async function handleApproveAction(provider: IProvider): Promise<any> {
     try {
+        const publicClient = createPublicClient({
+            chain: getViewChain(provider),
+            transport: custom(provider),
+        });
+
+        const walletClient = createWalletClient({
+            chain: getViewChain(provider),
+            transport: custom(provider),
+        });
+
         const account = await walletClient.getAddresses();
 
         // Étape 1 : Approve
@@ -43,8 +54,18 @@ export async function handleApproveAction(provider: IProvider, publicClient: Pub
         throw error;
     }
 }
-export async function handleDepositAction(provider: IProvider, publicClient: PublicClient, walletClient: WalletClient): Promise<any> {
+export async function handleDepositAction(provider: IProvider): Promise<any> {
     try {
+        const publicClient = createPublicClient({
+            chain: getViewChain(provider),
+            transport: custom(provider),
+        });
+
+        const walletClient = createWalletClient({
+            chain: getViewChain(provider),
+            transport: custom(provider),
+        });
+
         const account = await walletClient.getAddresses();
 
         // Passe à l'étape suivante
