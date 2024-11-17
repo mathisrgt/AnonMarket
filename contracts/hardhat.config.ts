@@ -37,10 +37,14 @@ const config: HardhatUserConfig = {
       accounts: [PRIVATE_KEY]
     },
     baseSepolia: {
-     url: "https://sepolia.base.org",
-     accounts: [PRIVATE_KEY],
-     gasPrice: 1000000000,
-   }
+      url: "https://sepolia.base.org",
+      accounts: [PRIVATE_KEY],
+      gasPrice: 1000000000,
+    },
+    worldChain: {
+      url: "https://worldchain-sepolia.g.alchemy.com/public",
+      accounts: [PRIVATE_KEY],
+    },
   },
   etherscan: {
     apiKey: {
