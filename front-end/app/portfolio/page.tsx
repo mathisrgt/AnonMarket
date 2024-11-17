@@ -95,6 +95,42 @@ export default function PortfolioPage() {
         );
     };
 
+    const handleDeposit = async () => {
+        if (!provider) {
+            console.error('Error: Provider is not initialized.');
+            return;
+        }
+
+        const publicClient = createPublicClient({
+            chain: getViewChain(provider),
+            transport: custom(provider),
+        });
+
+        const walletClient = createWalletClient({
+            chain: getViewChain(provider),
+            transport: custom(provider),
+        });
+
+        try {
+            setIsLoading(true); // Démarrage du chargement
+
+            // Étape 1: Approbation
+            const approvalResponse = await handleApproveAction(provider, publicClient, walletClient);
+            console.log('Approval successful:', approvalResponse);
+
+            // Étape 2: Dépôt
+            const depositResponse = await handleDepositAction(provider, publicClient, walletClient);
+            console.log('Deposit successful:', depositResponse);
+
+            // Met à jour l'état d'approbation
+            setIsApproved(true);
+        } catch (error) {
+            console.error('Deposit action failed:', error);
+        } finally {
+            setIsLoading(false); // Fin du chargement
+        }
+    };
+
     // Add the claim handler
     const handleClaim = (position: any) => {
         console.log('Claiming position:', position);
@@ -177,7 +213,14 @@ export default function PortfolioPage() {
                                         <ModalHeader className="flex flex-col gap-1">Fund your account</ModalHeader>
                                         <ModalBody>
                                             <div className="grid grid-cols-1 gap-4 h-[210px]">
-                                                <Button color="primary" className="w-full bg-black" size="lg"><Download /> Deposit</Button>
+                                                <Button
+                                                    color="primary"
+                                                    className="w-full bg-black"
+                                                    size="lg"
+                                                    onClick={handleDeposit}
+                                                >
+                                                    <Download /> Deposit
+                                                </Button>
                                                 <Button color="primary" variant="bordered" className="w-full border-black text-black" size="lg" onClick={() => (handleDepositInescrow())}>
                                                     <ArrowRightLeft />Swap
                                                 </Button>
