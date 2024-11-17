@@ -5,13 +5,13 @@ export const availableMarkets = {
             title: "Bitcoin Price Above $100K",
             description: "Will Bitcoin reach $100,000 by the end of 2025?",
             longDescription: "This market will resolve to 'Yes' if the price of Bitcoin (BTC) reaches or exceeds $100,000 USD on any major exchange before December 31st, 2025 23:59:59 UTC.",
-            odds: "1.95",
+            odds: "0.5",
             endDate: "Dec 31, 2025",
             volume: "$1.2M",
             type: "binary",
             options: [
-                { label: "Yes", odds: "1.95" },
-                { label: "No", odds: "2.05" }
+                { label: "Yes", odds: "0.5" },
+                { label: "No", odds: "0.5" }
             ]
         },
         {
@@ -24,8 +24,8 @@ export const availableMarkets = {
             volume: "$856K",
             type: "binary",
             options: [
-                { label: "Yes", odds: "2.10" },
-                { label: "No", odds: "1.85" }
+                { label: "Yes", odds: "0.5" },
+                { label: "No", odds: "0.5" }
             ]
         }
     ],
@@ -40,8 +40,8 @@ export const availableMarkets = {
             volume: "$2.1M",
             type: "multiple-choice",
             options: [
-                { label: "Manchester City", odds: "2.50" },
-                { label: "Real Madrid", odds: "3.75" }
+                { label: "Manchester City", odds: "0.5" },
+                { label: "Real Madrid", odds: "0.5" }
             ]
         },
         // ... other sports markets
@@ -57,8 +57,8 @@ export const availableMarkets = {
             volume: "$5.2M",
             type: "multiple-choice",
             options: [
-                { label: "Trump", odds: "1.85" },
-                { label: "Biden", odds: "2.15" }
+                { label: "Trump", odds: "0.5" },
+                { label: "Biden", odds: "0.5" }
             ]
         },
         // ... other politics markets
