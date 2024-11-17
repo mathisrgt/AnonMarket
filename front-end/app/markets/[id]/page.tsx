@@ -4,6 +4,7 @@ import { ArrowLeft, Minus, Plus } from 'lucide-react';
 import { Button } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
 import { interactionAMM } from '../../../services/viemMarkets'; // Assurez-vous du bon chemin d'importation
+import { getPriceAMM } from '../../../services/viemAMM';
 import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
 
 interface Market {
@@ -38,9 +39,49 @@ export default function MarketPage() {
         potentialWin: "4.00"
     });
 
-    const {
-        provider
-    } = useWeb3Auth();
+    const [loadingOdds, setLoadingOdds] = useState<boolean>(false);
+
+    const { provider } = useWeb3Auth();
+
+    const fetchAndUpdateOdds = async (label: string) => {
+        if (!provider || !market) {
+            console.error("Provider or market data not available");
+            return;
+        }
+
+        setLoadingOdds(true);
+
+        try {
+            // Identifier l'ID basé sur le label
+            const voteId = label === "Yes" ? 0 : 1;
+
+            // Appeler la fonction pour obtenir les prix on-chain
+            const odds = await getPriceAMM(provider, voteId, market.id);
+
+            console.log(`Updated odds for ${label}:`, odds);
+
+            // Si odds est un tableau, choisissez une valeur (par exemple, la première)
+            const updatedOdds = Array.isArray(odds) ? odds[0] : odds;
+
+            // Convertir en chaîne si nécessaire
+            const oddsAsString = String(updatedOdds);
+
+            // Mettre à jour les odds dans l'état local
+            setMarket((prevMarket) => {
+                if (!prevMarket) return null;
+
+                const updatedOptions = prevMarket.options.map(option =>
+                    option.label === label ? { ...option, odds: oddsAsString } : option
+                );
+
+                return { ...prevMarket, options: updatedOptions };
+            });
+        } catch (error) {
+            console.error('Failed to fetch odds:', error);
+        } finally {
+            setLoadingOdds(false);
+        }
+    };
 
     useEffect(() => {
         try {
@@ -94,7 +135,7 @@ export default function MarketPage() {
                 outcome: voteId,
                 marketId,
             };
-        
+
             console.log('Request body:', requestBody);
 
             // Effectuez la requête POST vers votre backend
@@ -177,14 +218,20 @@ export default function MarketPage() {
                             className="h-14"
                             color="primary"
                             variant={selectedOption === option.label ? "solid" : "bordered"}
-                            onClick={() => setSelectedOption(option.label)}
+                            onClick={async () => {
+                                setSelectedOption(option.label); // Sélectionner l'option
+                                await fetchAndUpdateOdds(option.label); // Mettre à jour les odds
+                            }}
                         >
                             <div className="flex flex-col">
                                 <span>{option.label}</span>
-                                <span className="text-sm opacity-80">{option.odds}</span>
+                                <span className="text-sm opacity-80">
+                                    {loadingOdds && selectedOption === option.label ? "Loading..." : option.odds}
+                                </span>
                             </div>
                         </Button>
                     ))}
+
                 </div>
 
                 {selectedOption && (
