@@ -1,12 +1,10 @@
-Here is an updated version of the readme with the use cases for **Ring Signatures**:
-
----
-
 # 🔗 **AnonMarket** (Eth Global Bangkok 2024) 🌍  
+  
 
 <h4 align="center">  
- 🎥 <a href="https://youtu.be/">**Watch Video Walkthrough**</a>  
+ 🎥 <a href="https://www.youtube.com/watch?v=lrAvW4_3MSg/">**Watch Video Walkthrough**</a>  
 </h4>  
+
 
 ---
 
@@ -52,6 +50,15 @@ AnonMarket leverages **state-of-the-art technologies** to create a seamless and 
 ### 🔒 **Backend**  
 
 AnonMarket’s backend is a robust multi-chain architecture deployed on several blockchains to ensure **immutability, transparency, scalability, and reliability**. Each chain brings its unique strengths, catering to the diverse needs of our platform:  
+
+- **Escrow**  
+  - **Contract**: [Base Smart Contract](https://sepolia.etherscan.io/address/0x8fcaedd4478b7843a5f0757d90ebb9aa64e47e76)
+ 
+- **AMM**  
+  - **Contract**: [Base Smart Contract](https://sepolia.etherscan.io/address/0x971A566C700bfb18C33D3536aFDE4cb89a9a6c62)
+ 
+- **Oracle**  
+  - **Contract**: [Base Smart Contract](https://sepolia.etherscan.io/address/0x2F8e49D12718Dd2D996E51638B83180C03b59d2c)  
 
 - **Base**  
   Optimized for scalability and low transaction costs, Base enhances accessibility for mass adoption by reducing gas fees.  

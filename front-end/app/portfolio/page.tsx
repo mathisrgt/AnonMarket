@@ -8,9 +8,13 @@ import { createWalletClient, createPublicClient, custom, formatEther, parseUnits
 import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
 import handleSwap from "@/services/handleSwap"
 import { handleApproveAction, handleDepositAction } from "../../services/viemEscrow";
+import { interactionAMM } from '../../services/viemMarkets';
 import NavBar from "@/components/NavBar";
 import { getViewChain } from "@/services/viemRPC";
 import { portefolioMarkets } from "@/data/markets";
+
+import axios from 'axios';
+import { IProvider } from "@web3auth/base";
 
 export default function PortfolioPage() {
     const router = useRouter();
@@ -82,7 +86,7 @@ export default function PortfolioPage() {
                                         color="primary"
                                         variant="flat"
                                         className="w-full"
-                                        onClick={() => handleClaim(position)}
+                                        onClick={() => handleClaim(provider)}
                                     >
                                         Claim Position
                                     </Button>
@@ -124,9 +128,47 @@ export default function PortfolioPage() {
     };
 
     // Add the claim handler
-    const handleClaim = (position: any) => {
-        console.log('Claiming position:', position);
-        // Add your claim logic here
+    const handleClaim = async (provider: IProvider) => {
+        if (!provider) {
+            console.error('Error: Provider is not initialized.');
+            return;
+        }
+        try {
+            const marketId = 1;
+            const outcome = 1;
+            const amountUsdc = 1;
+            const recipient = "0x33e6A216C8041fd7167bE7cBd756986e6fdd4B7C";
+
+            const { ring, signature, message } = await interactionAMM(
+                provider,
+                marketId, // Market ID
+                outcome, // Vote ID
+                amountUsdc, // amountUSDC
+                1, // claimed
+            );
+
+            console.log('InteractionAMM result:', { ring, signature, message });
+
+            // Appel API pour récupérer les gains
+            const response = await axios.post('/api/redeem', {
+                marketId,
+                outcome,
+                signature: signature.toBase64(),
+                recipient,
+            });
+
+            console.log('Request body:', response.data);
+
+            if (response.status === 200) {
+                const { message, transactionHash, amountRedeemed } = response.data;
+                alert(`Success! Transaction hash: ${transactionHash}, Amount redeemed: ${amountRedeemed}`);
+            } else {
+                alert(`Error: ${response.data.error}`);
+            }
+        } catch (error) {
+            console.error("Error claiming position:", error);
+            alert('Failed to claim position. Please try again.');
+        }
     };
     async function handleDepositInescrow() {
         if (!provider) {
