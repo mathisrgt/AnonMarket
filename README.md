@@ -71,7 +71,7 @@ AnonMarket’s backend is a robust multi-chain architecture deployed on several 
 
 - **Linea**  
   Linea is an Ethereum Layer 2 scaling solution offering faster transactions and reduced fees while inheriting Ethereum’s security. Ideal for onboarding users at scale.  
-  - **Contract**: [Linea Smart Contract](https://rootstock-testnet.blockscout.com/address/0x1a548aD9D7e13fD3011Bd659B486CE27AC6E3CB9#code)  
+  - **Contract**: [Linea Smart Contract](https://sepolia.lineascan.build/address/address/0xE7037f0742360A7A82554102058A48F3c7751C64#code)  
 
 - **Scroll**  
   Scroll is a zkEVM-compatible Layer 2 solution, providing robust security and low-latency transactions, making it perfect for high-throughput scenarios.  
