@@ -18,6 +18,7 @@
     "@web3auth/ethereum-provider": "^9.4.0",
     "@web3auth/modal": "^9.4.0",
     "@web3auth/no-modal-react-hooks": "^9.4.0",
+    "@worldcoin/minikit-react": "^1.2.0",
     "elliptic": "^6.6.1",
     "ethers": "^5.7.2",
     "framer-motion": "^11.11.17",

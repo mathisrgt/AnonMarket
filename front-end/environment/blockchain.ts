@@ -31,3 +31,8 @@ if (process.env.NEXT_PUBLIC_PRIVATE_KEY === undefined) {
     throw new Error('NEXT_PUBLIC_PRIVATE_KEY is undefined');
 }
 export const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+
+if (process.env.NEXT_PUBLIC_WORLD_APP_ID === undefined) {
+    throw new Error('NEXT_PUBLIC_WORLD_APP_ID is undefined');
+}
+export const world_app_id = process.env.NEXT_PUBLIC_WORLD_APP_ID;

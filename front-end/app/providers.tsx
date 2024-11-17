@@ -11,6 +11,10 @@ import { AuthAdapter } from "@web3auth/auth-adapter";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { AccountAbstractionProvider, BiconomySmartAccount } from "@web3auth/account-abstraction-provider";
 
+// world
+import { MiniKit } from '@worldcoin/minikit-js';
+import MiniKitProvider from "@/components/minikit-provider";
+
 // viem
 import RPC from "@/services/viemRPC";
 import { createWalletClient, WalletClient, custom } from "viem";
@@ -22,6 +26,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { auth0_clientId, auth0_domain, chainId, pimlicoApiKey, verifier_name, web3auth_clientId } from "@/environment/blockchain";
 
 const Providers: FC<any> = ({ children }) => {
+
   const chainConfig = {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
     chainId: "0xaa36a7",
@@ -67,16 +72,19 @@ const Providers: FC<any> = ({ children }) => {
   // if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
   return (
     <NextUIProvider>
-      <Web3AuthProvider config={{
-        web3AuthOptions: {
-          clientId: web3auth_clientId,
-          privateKeyProvider,
-          accountAbstractionProvider,
-          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-          useAAWithExternalWallet: false,
-        },
-        adapters: [authAdapter]
-      }}>{children}</Web3AuthProvider></NextUIProvider>
+      <MiniKitProvider>
+        <Web3AuthProvider config={{
+          web3AuthOptions: {
+            clientId: web3auth_clientId,
+            privateKeyProvider,
+            accountAbstractionProvider,
+            web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
+            useAAWithExternalWallet: false,
+          },
+          adapters: [authAdapter]
+        }}>{children}</Web3AuthProvider>
+      </MiniKitProvider>
+    </NextUIProvider>
   );
   // }
 };
