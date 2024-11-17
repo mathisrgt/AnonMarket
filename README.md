@@ -47,6 +47,8 @@ AnonMarket combines **privacy, reliability, and accessibility** to redefine pred
 
 AnonMarket leverages **state-of-the-art technologies** to create a seamless and efficient platform:  
 
+<img width="3488" alt="Sequence Diagram - AnonMarket" src="https://github.com/user-attachments/assets/e9354aaa-3247-4a6e-bf70-b1d1d59aab48">
+
 ### 🔒 **Backend**  
 
 AnonMarket’s backend leverages a **multi-chain architecture** to deliver **scalability, transparency, and reliability** across various blockchain ecosystems. Each chain serves a unique purpose, ensuring seamless functionality and a tailored experience for users.  
