@@ -2,13 +2,20 @@ import { createPublicClient, createWalletClient, http, encodeFunctionData, Addre
 import { sepolia } from 'viem/chains';
 import { privateKey, rpcUrl } from '@/environment/blockchain';
 import { contractAddress_AMM, contractABI_AMM, contractAddress_Oracle, contractABI_Oracle, contractAddress_escrow, contractABI_escrow } from '../../../components/constants';
-import { privateKeyToAccount } from 'viem/accounts';
 import { HermesClient } from "@pythnetwork/hermes-client";
+import { RingSignature, Curve, CurveName, Point } from '@cypher-laboratory/alicesring-lsag';
+import { privateKeyToAccount } from 'viem/accounts';
+
+import { keccak256, toBytes } from 'viem';
+
+// Initialisation de la courbe elliptique
+const curve = new Curve(CurveName.SECP256K1);
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { marketId, outcome, keyImage, recipient } = body;
+        const { marketId, outcome, signature, recipient } = body;
+        console.log("marketId", marketId, outcome);
 
         const publicClient = createPublicClient({
             chain: sepolia,
@@ -21,6 +28,19 @@ export async function POST(request: Request) {
         });
 
         const account = privateKeyToAccount(privateKey as Address);
+
+        // Conversion de la signature en format utilisable
+        const parsedSignature = RingSignature.fromBase64(signature);
+        const point = new Point(curve, [parsedSignature.getKeyImage().x, parsedSignature.getKeyImage().y]);
+        const keyImage = point.toEthAddress();
+
+        console.log('Key Image:', keyImage);
+
+        const bytes32KeyImage = `0x${keyImage.slice(2).padStart(64, '0')}`; // Conversion pour bytes32
+
+        console.log('Bytes32 Key Image:', bytes32KeyImage);
+
+        ////////////////////////////////////
 
         // Vérifiez si le marché est résolu
         const isMarketResolved = await publicClient.readContract({
@@ -85,7 +105,7 @@ export async function POST(request: Request) {
             address: contractAddress_AMM,
             abi: contractABI_AMM,
             functionName: 'calculateUserGain',
-            args: [outcome, keyImage, marketId],
+            args: [outcome, bytes32KeyImage, marketId],
         }) as BigInt;
 
         console.log("userGain", userGain);
@@ -97,34 +117,43 @@ export async function POST(request: Request) {
             );
         }
 
-        // Créer une preuve signée
-        const message = encodeFunctionData({
-            abi: [
-                { type: 'function', name: 'keccak256', inputs: ['address', 'uint256'] },
-            ],
-            functionName: 'keccak256',
-            args: [recipient, userGain],
-        });
+        // Étape 1 : Préparer les données
+        // const messageBytes = toBytes(recipient + userGain.toString());
+        // const messageHash = keccak256(messageBytes); // Hash du message
 
-        const signedMessage = await walletClient.signMessage({
-            message,
-            account,
-        });
+        // console.log('Message Hash:', messageHash);
 
-        console.log("signedMessage", signedMessage);
+        // // Étape 2 : Générer le préfixe Ethereum Signed Message
+        // const ethSignedMessageHash = keccak256(
+        //     toBytes(`\x19Ethereum Signed Message:\n32${messageHash}`)
+        // );
 
-        // Récupérer l'USDC via le contrat escrow
+        // console.log('Ethereum Signed Message Hash:', ethSignedMessageHash);
+
+        // // Étape 3 : Signer le message
+        // const signedMessage = await walletClient.signMessage({
+        //     message: ethSignedMessageHash,
+        //     account,
+        // });
+
+        // console.log("Signed Message:", signedMessage);
+
+        // Maintenant, `signedMessage` peut être utilisé pour appeler la fonction `redeem` de votre contrat
+
         const redeemData = encodeFunctionData({
             abi: contractABI_escrow,
             functionName: 'redeem',
-            args: [signedMessage, recipient, userGain],
+            args: [bytes32KeyImage, recipient, userGain],
         });
-
+        
         const redeemTxHash = await walletClient.sendTransaction({
             to: contractAddress_escrow,
             data: redeemData,
+            value: BigInt(0),
             account,
         });
+        
+        console.log('Redeem Transaction Hash:', redeemTxHash);
 
         const receipt = await publicClient.waitForTransactionReceipt({ hash: redeemTxHash });
 
