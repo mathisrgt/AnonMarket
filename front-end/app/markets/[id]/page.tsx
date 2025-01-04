@@ -5,7 +5,7 @@ import { Button } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
 import { interactionAMM } from '../../../services/viemMarkets'; // Assurez-vous du bon chemin d'importation
 import { getPriceAMM } from '../../../services/viemAMM';
-import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
+import { useWeb3Auth } from "@web3auth/modal-react-hooks";
 
 interface Market {
     id: number;

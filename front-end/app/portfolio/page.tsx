@@ -5,7 +5,7 @@ import { ArrowDownToLine, ArrowRightLeft, ArrowUpFromLine, CreditCard, Download 
 import { useRouter } from 'next/navigation';
 import { Key, useState } from "react";
 import { createWalletClient, createPublicClient, custom, formatEther, parseUnits, encodeFunctionData, parseEther } from 'viem'
-import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
+import { useWeb3Auth } from "@web3auth/modal-react-hooks";
 import handleSwap from "@/services/handleSwap"
 import { handleApproveAction, handleDepositAction } from "../../services/viemEscrow";
 import { interactionAMM } from '../../services/viemMarkets';
@@ -86,7 +86,7 @@ export default function PortfolioPage() {
                                         color="primary"
                                         variant="flat"
                                         className="w-full"
-                                        onClick={() => handleClaim(provider)}
+                                        onClick={() => { if (provider) handleClaim(provider) }}
                                     >
                                         Claim Position
                                     </Button>

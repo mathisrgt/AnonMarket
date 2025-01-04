@@ -4,10 +4,9 @@
 import { FC, useEffect } from "react";
 
 // web3auth
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { Web3AuthProvider, useWeb3Auth } from "@web3auth/no-modal-react-hooks";
+import { Web3AuthProvider } from "@web3auth/modal-react-hooks";
 import { WALLET_ADAPTERS, CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK, UX_MODE } from "@web3auth/base";
-import { AuthAdapter } from "@web3auth/auth-adapter";
+
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { AccountAbstractionProvider, BiconomySmartAccount } from "@web3auth/account-abstraction-provider";
 
@@ -35,21 +34,21 @@ const Providers: FC<any> = ({ children }) => {
 
   const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
 
-  const authAdapter = new AuthAdapter({
-    loginSettings: {
-      mfaLevel: "default",
-    },
-    adapterSettings: {
-      uxMode: UX_MODE.REDIRECT,
-      loginConfig: {
-        jwt: {
-          verifier: verifier_name,
-          typeOfLogin: "jwt",
-          clientId: auth0_clientId,
-        },
-      },
-    },
-  });
+  // const authAdapter = new AuthAdapter({
+  //   loginSettings: {
+  //     mfaLevel: "default",
+  //   },
+  //   adapterSettings: {
+  //     uxMode: UX_MODE.REDIRECT,
+  //     loginConfig: {
+  //       jwt: {
+  //         verifier: verifier_name,
+  //         typeOfLogin: "jwt",
+  //         clientId: auth0_clientId,
+  //       },
+  //     },
+  //   },
+  // });
 
   const accountAbstractionProvider = new AccountAbstractionProvider({
     config: {
@@ -75,7 +74,6 @@ const Providers: FC<any> = ({ children }) => {
           web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
           useAAWithExternalWallet: false,
         },
-        adapters: [authAdapter]
       }}>{children}</Web3AuthProvider></NextUIProvider>
   );
   // }

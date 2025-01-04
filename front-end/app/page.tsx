@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 // web3auth
 import { WALLET_ADAPTERS } from "@web3auth/base";
-import { useWeb3Auth } from "@web3auth/no-modal-react-hooks";
+import { useWeb3Auth } from "@web3auth/modal-react-hooks";
 
 // ui
 import { Button } from "@nextui-org/react";
@@ -18,7 +18,7 @@ import NavBar from "@/components/NavBar";
 
 export default function Home() {
   const {
-    connectTo,
+    connect,
     isConnected,
     isInitialized
   } = useWeb3Auth();
@@ -39,20 +39,12 @@ export default function Home() {
         <Button
           className="bg-black text-white h-[60px] text-lg"
           size="lg"
-          isDisabled={isConnected}
-          onClick={() =>
-            connectTo(WALLET_ADAPTERS.AUTH, {
-              loginProvider: "jwt",
-              extraLoginOptions: {
-                domain: auth0_domain,
-                verifierIdField: "sub",
-                connection: "worldcoin",
-              },
-            })
+          isDisabled={isConnected || !isInitialized}
+          onClick={() => { connect() }
           }>
           <ArrowRight />Start
         </Button>
-      </main>
+      </main >
     </>
   );
 }
