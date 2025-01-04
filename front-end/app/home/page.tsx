@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardBody, Input, Button, Tabs, Tab, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { Search, TrendingUp, Trophy, LandPlot } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -7,10 +7,33 @@ import Image from 'next/image';
 import NavBar from '@/components/NavBar';
 import { ChainSelector } from '@/components/ux/ChainSelector';
 import { availableMarkets, portefolioMarkets } from '@/data/markets';
+import { useWeb3Auth } from '@web3auth/modal-react-hooks';
+import { getViewChain } from '@/services/viemRPC';
+import { createWalletClient, custom } from 'viem';
 
 export default function HomePage() {
-    const router = useRouter();
     const [selectedCategory, setSelectedCategory] = useState('finance');
+
+    const {
+        provider
+    } = useWeb3Auth();
+    const router = useRouter();
+
+    async function displayAccountData() {
+        if (provider) {
+            const walletClient = createWalletClient({
+                chain: getViewChain(provider),
+                transport: custom(provider),
+            });
+
+            console.log('Account info:', walletClient.account);
+            console.log('Addresses info:', await walletClient.getAddresses());
+        }
+    }
+
+    useEffect(() => {
+        displayAccountData()
+    }, [provider]);
 
     const handleMarketClick = (market: any) => {
         try {

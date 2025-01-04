@@ -3,7 +3,7 @@ import { Card, CardBody, Button, Divider, Tabs, Tab, useDisclosure, Modal, Modal
 import Image from 'next/image';
 import { ArrowDownToLine, ArrowRightLeft, ArrowUpFromLine, CreditCard, Download } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { createWalletClient, createPublicClient, custom, formatEther, parseUnits, encodeFunctionData, parseEther } from 'viem'
 import { useWeb3Auth } from "@web3auth/modal-react-hooks";
 import handleSwap from "@/services/handleSwap"
