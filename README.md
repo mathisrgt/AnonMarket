@@ -189,26 +189,6 @@ Incorporating **Fusion+ from 1Inch** solved interoperability challenges, creatin
 
 ---
 
-## 👥 **Meet the Team**  
-
-We’re a group of passionate developers with a shared love for **blockchain innovation**:  
-
-- 👨‍💻 **[Mathis Sergent](https://linkedin.com/in/mathis-sergent/)**  
-  **Backend Developer** | 4+ years of experience | Passionate about scalable architectures | 10+ hackathons worldwide.  
-
-- 👨‍💻 **[Mathieu Laruelle](https://linkedin.com/in/mathieu-laruelle/)**  
-  **FullStack Developer** | 3+ years of experience | Expert in creating intuitive interfaces | Hackathon veteran.  
-
-- 🎨 **[Marc Bertholat](https://linkedin.com/in/marcbertholat/)**  
-  **UI/UX Designer** | 3+ years of experience | Focused on delivering seamless user experiences | Hackathon enthusiast.  
-
-- 👨‍💻 **[Charles-André Goichot](https://linkedin.com/in/charles-andr%C3%A9-goichot/)**  
-  **Blockchain Developer** | 4+ years of experience | Skilled in optimizing performance | Skilled problem solver.  
-
-- 👨‍💻 **[Ewan Hamon](https://linkedin.com/in/ewan-hamon/)**  
-  **Frontend Developer** | 4+ years of experience | Specialized in Rust & Smart Contracts | 10+ hackathons globally.  
-
----
 
 ## 🤝 **Feedback and Support**  
 
